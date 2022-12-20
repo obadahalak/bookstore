@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function createUser(UserRequest $Request){
 
-        $createUser=User::create($Request->validated());
+        $createUser=User::create([$Request->validated()]);
          return $createUser;
      }
 }
