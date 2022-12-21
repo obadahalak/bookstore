@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class book extends Model
 {
     use HasFactory;
-    public $guards = [];
+    protected $guards = [];
 
 
     public function coverImage()

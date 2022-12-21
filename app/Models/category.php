@@ -10,7 +10,7 @@ class category extends Model
 {
     use HasFactory;
 
-    public $guarded=[];
+    protected $guarded=[];
 
     public function image(){
         return $this->morphOne(image::class,'imageable');

@@ -9,6 +9,8 @@ class image extends Model
 {
     use HasFactory;
 
+    protected $gurded=[];
+
     /**
      * Get the parent imageable model (user or post).
      */
