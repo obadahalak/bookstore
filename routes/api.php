@@ -2,10 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\Auth\AuthController;
 
 
+Route::get('/seeder',function(){
+ Artisan::call('migrate:fresh --seed');
+});
 
 Route::controller(AuthController::class)->group(function(){
 
