@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\image;
+use App\Models\Book;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class auther extends Model
+class Auther extends Model
 {
     use HasFactory;
 
@@ -14,6 +15,10 @@ class auther extends Model
 
 
     public function image(){
-        return $this->morphOne(image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function books(){
+        return $this->hasMany(Book::class);
     }
 }

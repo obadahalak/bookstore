@@ -27,9 +27,10 @@ class UserRequest extends FormRequest
             case 'GET':
 
                 return [
-                    'email' => 'required|email|exists:users,email',
+                'email' =>['required','email','exists:users,email'],
                     'password' => 'required',
                 ];
+                break;
 
             case 'POST':
                 return [
@@ -37,6 +38,26 @@ class UserRequest extends FormRequest
                     'email' => ['required', 'unique:users,email'],
                     'password' => ['required', 'min:5'],
                 ];
+
+            break;
+        }
+    }
+
+    public function messages(){
+
+        switch($this->method()){
+                case 'GET':
+                    return [
+                        'email.exists'=>'email or password not correct',
+                    ];
+                    break;
+
+                case 'POST':
+                    return [
+                        ////default messages
+                    ];
+                    break;
+
         }
     }
 }

@@ -7,14 +7,24 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
 
+    protected function validationException()
+    {
+        throw ValidationException::withMessages([
+            'email' => ['Email or password not correct'],
+        ]);
+    }
     public function createToken($user)
     {
-        $token = $user->createToken($user);
-        return $token;
+
+        $token = $user->createToken();
+
         return response()->json(['token' => $token->plainTextToken]);
     }
     public function createUser(UserRequest $Request)
@@ -22,10 +32,12 @@ class AuthController extends Controller
         $createUser = User::create($Request->validated());
         return $this->createToken($createUser);
     }
+
     public function authUser(UserRequest $Request)
     {
-          $authUser = Auth::attempt(['email'=>$Request->email,'password'=>$Request->password]);
-
-        return $this->createToken($authUser);
+        $user = User::where('email', $Request->email)->first();
+        if (!$user || !Hash::check($Request->password, $user->password)) {
+            return $this->validationException();
+        }
     }
 }

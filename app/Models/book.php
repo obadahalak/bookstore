@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class book extends Model
+class Book extends Model
 {
     use HasFactory;
     protected $guards = [];
@@ -13,10 +14,10 @@ class book extends Model
 
     public function coverImage()
     {
-        return $this->morphOne(image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
     public function images()
     {
-        return $this->morphMany(image::class, 'imageable');
+        return $this->morphMany(Image::class, 'imageable');
     }
 }
