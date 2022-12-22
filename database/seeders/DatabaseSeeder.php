@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Auther;
+use App\Models\Book;
+use App\Models\Category;
+use App\Models\Image;
 // use PharIo\Manifest\Author;
 use Illuminate\Database\Seeder;
 
@@ -16,15 +19,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Auther::factory()
-        ->count(20)
-        ->hasBooks(2)
-        ->create();
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Category::factory(8)
+            ->has(
+                Image::factory()
+                    ->count(1)
+                    ->state(function (array $attributes, Category $category) {
+                        return ['type' => ''];
+                    })
+            )->create();
+
+
+            Auther::factory(10)->hasImage(1,['type'=>''])->create();
+
+            $book=Book::factory()->count(50)->hasImages(4,['type'=>'gallary'])
+
+           ->hascoverImage(1,['type'=>'cover']);
+
+           $book->create();
+        //    $book->hasImages(4,['type'=>'gallary'])->create();
+        //    $gallaryImage->create();-
     }
 }
