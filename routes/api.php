@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\bookController;
 use App\Http\Controllers\Api\CategoryController;
+use  App\Http\Controllers\Api\bookController;
+
 
 ////configuration ///
 Route::get('/seeder', function () {
