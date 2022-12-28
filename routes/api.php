@@ -15,6 +15,11 @@ Route::get('/seeder', function () {
 });
 
 
+Route::get('/clear', function () {
+    Artisan::call('optimize:clear');
+});
+
+
 ////authentication endpoints ///
 Route::controller(AuthController::class)->group(function () {
 
