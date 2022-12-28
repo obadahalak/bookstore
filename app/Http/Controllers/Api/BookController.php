@@ -1,28 +1,25 @@
 <?php
 
-
 namespace App\Http\Controllers\Api;
 
-
-use App\Models\book;
-use App\Models\Auther;
-use App\Http\Resources\BookResource;
 use  App\Http\Controllers\Controller;
-use App\Http\Resources\AutherResource;
+use App\Http\Resources\BookResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TagResource;
+use App\Models\Book;
+use App\Models\Category;
+use App\Models\Tag;
 
-class BookController extends Controller
+class bookController extends Controller
 {
 
+    public function books()
+    {
+        return BookResource::collection(Book::latest()->paginate(10));
+    }
+    public function book($id){
+        return new  BookResource(Book::find($id));
+    }
 
-    public function newBooks(){
-        return BookResource::collection(Book::with(['coverImage','Images'])->latest()->paginate(4));
-    }
-    public function bestRating(){
-        return BookResource::collection(Book::with(['coverImage','Images'])->orderBy('rating','desc')->paginate(4));
-    }
-
-    public function authors(){
-        return AutherResource::collection(Auther::with(['image'])->paginate(4));
-    }
 
 }

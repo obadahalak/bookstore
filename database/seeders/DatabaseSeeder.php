@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Auther;
+use App\Models\Tag;
 use App\Models\Book;
-use App\Models\Category;
 use App\Models\Image;
+use App\Models\Auther;
 // use PharIo\Manifest\Author;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
+        Tag::factory(7)->create();
         Category::factory(8)
             ->has(
                 Image::factory()

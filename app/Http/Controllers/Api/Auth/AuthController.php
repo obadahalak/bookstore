@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function createToken($user)
     {
 
-        $token = $user->createToken();
+        $token = $user->createToken('test');
 
         return response()->json(['token' => $token->plainTextToken]);
     }
@@ -38,6 +38,8 @@ class AuthController extends Controller
         $user = User::where('email', $Request->email)->first();
         if (!$user || !Hash::check($Request->password, $user->password)) {
             return $this->validationException();
+        }else{
+                return $this->createToken($user);
         }
     }
 }
