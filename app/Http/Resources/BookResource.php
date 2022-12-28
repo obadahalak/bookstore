@@ -26,6 +26,7 @@ class BookResource extends JsonResource
             'category'=>$this->category->name,
             'coverImage'=>$this->coverImage->file,
             'gallaryImage'=>GallaryImagesResurce::collection($this->Images),
+            'category_name'=>$this->category->name,
 
         ];
     }
