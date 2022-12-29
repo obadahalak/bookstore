@@ -21,8 +21,8 @@ class HomeController extends Controller
 
             [
                 'tags' =>
-                ['id' => 1, 'tagName' => 'NEW BOOKS', 'BOOKS' => book::with('coverImage')->take(4)->get()],
-                ['id' => 1, 'tagName' => 'TOP RATING', 'BOOKS' => book::with('coverImage')->orderBy('rating', 'desc')->take(4)->get()]
+                ['id' => 1, 'tagName' => 'NEW BOOKS', 'BOOKS' => book::with('coverImage')->take(5)->get()],
+                ['id' => 1, 'tagName' => 'TOP RATING', 'BOOKS' => book::with('coverImage')->orderBy('rating', 'desc')->take(5)->get()]
             ]
         );
         // HomeResource::collection(book::with('coverImage')->paginate(4));
