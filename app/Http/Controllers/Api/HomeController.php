@@ -33,6 +33,8 @@ class HomeController extends Controller
 
     public function authors()
     {
+
         return AutherResource::collection(Auther::with(['image'])->paginate(10));
+
     }
 }
