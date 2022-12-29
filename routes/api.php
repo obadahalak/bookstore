@@ -42,6 +42,7 @@ Route::controller(HomeController::class)->group(function () {
 /// categories endpoints ////
 Route::controller(CategoryController::class)->group(function () {
 
+
     Route::get('/tags', 'tags');
     Route::get('/categories', 'categories');
     Route::get('/categoriesByTag/{tagId}', 'categoriesByTag');
