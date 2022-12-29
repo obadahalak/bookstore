@@ -25,8 +25,6 @@ class HomeController extends Controller
                 ['id' => 1, 'tagName' => 'TOP RATING', 'BOOKS' => book::with('coverImage')->orderBy('rating', 'desc')->take(5)->get()]
             ]
         );
-        // HomeResource::collection(book::with('coverImage')->paginate(4));
-
     }
     public function bestRating()
     {
@@ -35,6 +33,6 @@ class HomeController extends Controller
 
     public function authors()
     {
-        return AutherResource::collection(Auther::with(['image'])->paginate(4));
+        return AutherResource::collection(Auther::with(['image'])->paginate(10));
     }
 }
