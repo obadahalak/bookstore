@@ -17,7 +17,7 @@ class CategoryController extends Controller
     }
     public function categories()
     {
-        return CategoryResource::collection(Category::latest()->paginate(10));
+        return CategoryResource::collection(Category::with('tag')->latest()->paginate(10));
     }
 
     public function categoriesByTag($tagid)
