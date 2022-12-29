@@ -15,18 +15,26 @@ class HomeController extends Controller
 {
 
 
-    public function homePage(){
-        return HomeResource::collection(book::with('coverImage')->paginate(4));
+    public function homePage()
+    {
+        return response()->json(
+
+            [
+                'tags' =>
+                ['id' => 1, 'tagName' => 'NEW BOOKS', 'BOOKS' => book::with('coverImage')->take(4)->get()],
+                ['id' => 1, 'tagName' => 'TOP RATING', 'BOOKS' => book::with('coverImage')->orderBy('rating', 'desc')->take(4)->get()]
+            ]
+        );
+        // HomeResource::collection(book::with('coverImage')->paginate(4));
 
     }
-    public function bestRating(){
-        return BookResource::collection(Book::with(['coverImage','Images'])->orderBy('rating','desc')->paginate(4));
+    public function bestRating()
+    {
+        return BookResource::collection(Book::with(['coverImage', 'Images'])->orderBy('rating', 'desc')->paginate(4));
     }
 
-    public function authors(){
+    public function authors()
+    {
         return AutherResource::collection(Auther::with(['image'])->paginate(4));
     }
-
-
-
 }
