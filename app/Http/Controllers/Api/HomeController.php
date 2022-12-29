@@ -15,11 +15,9 @@ class HomeController extends Controller
 {
 
 
-    public function newBooks(){
+    public function homePage(){
         return HomeResource::collection(book::with('coverImage')->paginate(4));
-        // $newsBook =[ 'tagName'=>'NEWS BOOKS','books'=> HomeResource::collection(Book::with(['Images'])->latest()->paginate(4))];
 
-    //    return $newsBook;
     }
     public function bestRating(){
         return BookResource::collection(Book::with(['coverImage','Images'])->orderBy('rating','desc')->paginate(4));

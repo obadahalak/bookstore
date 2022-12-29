@@ -31,6 +31,7 @@ Route::controller(AuthController::class)->group(function () {
 ///// home page endpoints ////
 Route::controller(HomeController::class)->group(function () {
 
+    Route::get('/homePage','homePage');
     Route::get('/newBooks', 'newBooks');
     Route::get('/bestRating', 'bestRating');
     Route::get('/authors', 'authors');
