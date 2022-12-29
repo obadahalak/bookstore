@@ -17,25 +17,25 @@ class HomeResource extends JsonResource
     {
         return [
             'tags' => [
-                [
-                    'id' => 1,
-                    'tagName' => 'NEW BOOKS',
-                    'books' => [
-                        'id' => $this->id,
-                        'name' => $this->name,
-                        'details' => $this->details,
-                        'image' => $this->coverImage->file,
-                    ]
+
+                'id' => 1,
+                'tagName' => 'NEW BOOKS',
+                'books' => [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                    'details' => $this->details,
+                    'image' => $this->coverImage->file,
                 ],
-                [
-                    'id' => 2,
-                    'tagName' => 'TOP RATING',
-                    'books' => [
-                        'id' => $this->id,
-                        'name' => $this->name,
-                        'details' => $this->details,
-                        'image' => $this->coverImage->file,
-                    ]
+
+
+                'id' => 2,
+                'tagName' => 'TOP RATING',
+                'books' => [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                    'details' => $this->details,
+                    'image' => $this->coverImage->file,
+
                 ],
 
             ]
