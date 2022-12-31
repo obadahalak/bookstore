@@ -26,6 +26,7 @@ Route::controller(AuthController::class)->group(function () {
 
     Route::get('/login', 'authUser');
     Route::post('/user', 'createUser');
+
     Route::get('/getUser', 'getUser')->middleware('auth:sanctum');
 });
 
