@@ -37,6 +37,8 @@ class UserRequest extends FormRequest
                     'name' => ['required', 'min:3', 'max:20'],
                     'email' => ['required', 'unique:users,email'],
                     'password' => ['required', 'min:5'],
+                    'bio'=>['required'],
+                    'address' => ['required']
                 ];
 
             break;
