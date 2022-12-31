@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
                 ];
                 break;
 
-            case 'POST':
+        case 'POST':
                 return [
                     'name' => ['required', 'min:3', 'max:20'],
                     'email' => ['required', 'unique:users,email'],
