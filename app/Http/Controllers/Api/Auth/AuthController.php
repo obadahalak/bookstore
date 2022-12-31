@@ -42,4 +42,8 @@ class AuthController extends Controller
                 return $this->createToken($user);
         }
     }
+
+    public function getUser(){
+        return auth()->user();
+    }
 }
