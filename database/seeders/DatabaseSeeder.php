@@ -5,9 +5,10 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Tag;
 use App\Models\Book;
+use App\Models\User;
 use App\Models\Image;
-use App\Models\Auther;
 // use PharIo\Manifest\Author;
+use App\Models\Auther;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 
@@ -20,6 +21,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        User::factory(1)
+        ->has(
+            Image::factory()
+                ->count(1)
+                ->state(function (array $attributes, User $category) {
+                    return ['type' => ''];
+                })
+        )->create();
 
         Tag::factory(7)->create();
         Category::factory(8)

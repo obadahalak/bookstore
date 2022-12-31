@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -44,6 +45,11 @@ class AuthController extends Controller
     }
 
     public function getUser(){
-        return auth()->user();
+        return  new UserResource(auth()->user());
     }
+
+    public function users(){
+        return User::all();
+    }
+
 }
