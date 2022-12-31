@@ -26,7 +26,7 @@ Route::controller(AuthController::class)->group(function () {
 
     Route::get('/login', 'authUser');
     Route::post('/user', 'createUser');
-    Route::post('/getUser', 'getUser')->middleware('auth:sanctum');
+    Route::get('/getUser', 'getUser')->middleware('auth:sanctum');
 });
 
 ///// home page endpoints ////
