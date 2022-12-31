@@ -21,7 +21,7 @@ Route::get('/clear', function () {
 
 
 ////authentication endpoints ///
-Route::controller(AuthController::class)->group(function () {
+Route::controller(AuthController::class)->middleware('guest') ->group(function () {
 
 
     Route::get('/login', 'authUser');
