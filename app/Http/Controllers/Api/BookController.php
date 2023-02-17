@@ -18,7 +18,6 @@ class bookController extends Controller
     {
 
 
-            return $request->all();
         $book = Book::create([
             'name' => $request->name,
             'details' => $request->details,
