@@ -33,7 +33,7 @@ class BookRequest extends FormRequest
                     'auther_id'=>['required','exists:authers,id'],
                     'category_id'=>['required','exists:categories,id'],
                     'book_cover'=>['required','image','max:5000'],
-                    'book_gallery'=>['array'],
+                    'book_gallery'=>['array','required'],
                     'book_gallery.src.*'=>['required','image','max:5000'],
 
                 ];
