@@ -47,8 +47,12 @@ class AuthController extends Controller
     public function getUser(){
         return  new UserResource(auth()->user());
     }
-    public function update(Request $request){
-
+    public function update(UserRequest $request){
+        auth()->user()->update([
+            'name'=>$request->name,
+            'bio'=>$request->bio,
+            'email'=>$request->email,
+        ]);
     }
 
     public function users(){
