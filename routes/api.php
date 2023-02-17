@@ -60,4 +60,5 @@ Route::controller(bookController::class)->group(function () {
 
     Route::get('/books', 'books');
     Route::get('/book/{id}', 'book');
+    Route::post('/store-book', 'store');
 });
