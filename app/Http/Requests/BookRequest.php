@@ -34,9 +34,7 @@ class BookRequest extends FormRequest
                     'category_id'=>['required','exists:categories,id'],
                     'book_cover'=>['required','image','max:5000'],
                     'book_gallery'=>['array','required'],
-                    'book_gallery.src'=>['required'],
-                    'book_gallery.src.*'=>['image','max:5000'],
-
+                    'book_gallery.src.*'=>['required','image','max:5000'],
 
                 ];
 
