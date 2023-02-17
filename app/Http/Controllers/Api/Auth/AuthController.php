@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Validation\ValidationException;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AuthController extends Controller
 {
 
@@ -39,24 +41,48 @@ class AuthController extends Controller
         $user = User::where('email', $Request->email)->first();
         if (!$user || !Hash::check($Request->password, $user->password)) {
             return $this->validationException();
-        }else{
-                return $this->createToken($user);
+        } else {
+            return $this->createToken($user);
         }
     }
 
-    public function getUser(){
+    public function getUser()
+    {
         return  new UserResource(auth()->user());
     }
-    public function update(UserRequest $request){
-        auth()->user()->update([
-            'name'=>$request->name,
-            'bio'=>$request->bio,
-            'email'=>$request->email,
+    public function cheackOldPassword($old_password, $userPassword)
+    {
+        if (Hash::check($old_password, $userPassword)) return  true;
+        return false;
+    }
+    public function update(UserRequest $request)
+    {
+        $return = [];
+        $user = auth()->user();
+
+        $user->update([
+            'name' => $request->name,
+            'bio' => $request->bio,
+            'email' => $request->email,
+            'address' => $request->address,
         ]);
+        $return['profile'] = 'user profile updated successfully';
+        if (isset($request->old_password) || !isEmpty($request->old_password)) {
+            if ($this->cheackOldPassword($request->old_password, auth()->user()->password)) {
+
+                $user->update([
+                    'password' => $request->new_password,
+                ]);
+
+                $return['password'] = 'user password changed successfully';
+            }
+        }
+        return response()->json($return);
     }
 
-    public function users(){
+
+    public function users()
+    {
         return User::all();
     }
-
 }
