@@ -78,7 +78,7 @@ class AuthController extends Controller
             }
         }
         if($request->image){
-                $path=$request->image->store('public','userImages');
+                $path=$request->image->store('userImages','public');
                 $user->image()->create([
                     'file'=>'public/'.$path
                 ]);
