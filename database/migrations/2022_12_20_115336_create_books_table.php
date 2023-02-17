@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('details');
             $table->longText('overview');
-            $table->double('rating');
+            $table->double('rating')->default(1);
             $table->foreignIdFor(auther::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(category::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
