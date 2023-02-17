@@ -23,43 +23,56 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $userRules = [
+            'name' => ['required', 'min:3', 'max:20'],
+            'email' => ['required', 'unique:users,email'],
+            'password' => ['required', 'min:5'],
+            'bio' => ['required'],
+            'address' => ['required'],
+            'image' => ['image', 'max:5000'],
+        ];
         switch ($this->method()) {
             case 'GET':
 
                 return [
-                'email' =>['required','email','exists:users,email'],
+                    'email' => ['required', 'email', 'exists:users,email'],
                     'password' => 'required',
                 ];
                 break;
 
-        case 'POST':
+            case 'POST':
+                if($this->route()->getName()=='updateUser'){
+                    $userRules['email'][1]='unique:users,email,'.auth()->user()->id;
+                    return $userRules;
+                }
                 return [
                     'name' => ['required', 'min:3', 'max:20'],
                     'email' => ['required', 'unique:users,email'],
                     'password' => ['required', 'min:5'],
-                    'bio'=>['required'],
-                    'address' => ['required']
+                    'bio' => ['required'],
+                    'address' => ['required'],
+                    'image' => ['image', 'max:5000'],
                 ];
 
-            break;
+                break;
         }
     }
 
-    public function messages(){
+    public function messages()
+    {
 
-        switch($this->method()){
-                case 'GET':
-                    return [
-                        'email.exists'=>'email or password not correct',
-                    ];
-                    break;
+        switch ($this->method()) {
+            case 'GET':
+                return [
+                    'email.exists' => 'email or password not correct',
+                ];
+                break;
 
-                case 'POST':
-                    return [
-                        ////default messages
-                    ];
-                    break;
-
+            case 'POST':
+                return [
+                    ////default messages
+                ];
+                break;
         }
     }
 }
