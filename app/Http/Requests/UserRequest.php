@@ -48,7 +48,7 @@ class UserRequest extends FormRequest
             case 'POST':
                 if($this->route()->getName()=='updateUser'){
                     $userRules['email'][1]='unique:users,email,'.auth()->user()->id;
-                    return [ ... $updateUserRule,$userRules];
+                    return [ ... $updateUserRule, ...$userRules];
                 }
                 return [
                     'name' => ['required', 'min:3', 'max:20'],
