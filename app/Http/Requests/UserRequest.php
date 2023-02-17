@@ -33,7 +33,7 @@ class UserRequest extends FormRequest
             'image' => ['image', 'max:5000'],
         ];
         $updateUserRule=[
-            'old_password'=>'required',
+            'old_password'=>'',
             'new_password'=>['required_with:old_password','min:6','max:30','confirmed'],
         ];
         switch ($this->method()) {
