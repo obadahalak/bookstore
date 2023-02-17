@@ -67,7 +67,7 @@ class AuthController extends Controller
             'address' => $request->address,
         ]);
         $return['profile'] = 'user profile updated successfully';
-        if (isset($request->old_password)  && !isEmpty($request->old_password)) {
+        if ($request->old_password) {
             if ($this->cheackOldPassword($request->old_password, auth()->user()->password)) {
 
                 $user->update([
@@ -77,7 +77,7 @@ class AuthController extends Controller
                 $return['password'] = 'user password changed successfully';
             }
         }
-        if(isset($request->image) && ! isEmpty($request->image)){
+        if($request->image){
                 $path=$request->image->store('public','userImages');
                 $user->image()->create([
                     'file'=>'public/'.$path
