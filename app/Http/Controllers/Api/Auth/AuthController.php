@@ -26,14 +26,14 @@ class AuthController extends Controller
     public function createToken($user)
     {
 
-        $token = $user->createToken('test');
+        $token = $user->createToken('test')->accessToken;
 
-        return response()->json(['token' => $token->plainTextToken]);
+        return response()->json(['token' => $token]);
     }
     public function createUser(UserRequest $Request)
     {
-        $createUser = User::create($Request->validated());
-        return $this->createToken($createUser);
+        $user = User::create($Request->validated());
+        return $user->createToken('test')->accessToken;
     }
 
     public function authUser(UserRequest $Request)
@@ -42,13 +42,13 @@ class AuthController extends Controller
         if (!$user || !Hash::check($Request->password, $user->password)) {
             return $this->validationException();
         } else {
-            return $this->createToken($user);
+            return $user->createToken('Token Name')->accessToken;
         }
     }
 
     public function getUser()
     {
-        return  new UserResource(auth()->user());
+        return  new UserResource(auth('user')->user());
     }
     public function cheackOldPassword($old_password, $userPassword)
     {
@@ -58,7 +58,7 @@ class AuthController extends Controller
     public function update(UserRequest $request)
     {
         $return = [];
-        $user = auth()->user();
+        $user = auth('user')->user();
 
         $user->update([
             'name' => $request->name,
@@ -68,7 +68,7 @@ class AuthController extends Controller
         ]);
         $return['profile'] = 'user profile updated successfully';
         if ($request->old_password) {
-            if ($this->cheackOldPassword($request->old_password, auth()->user()->password)) {
+            if ($this->cheackOldPassword($request->old_password, auth('user')->user()->password)) {
 
                 $user->update([
                     'password' => $request->new_password,

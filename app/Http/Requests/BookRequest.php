@@ -16,6 +16,13 @@ class BookRequest extends FormRequest
         return true;
     }
 
+    public function messages()
+    {
+        return [
+            'book_gallery.*.src.image'=>'The book gallery image must be an image.',
+            'book_gallery.*.src.required'=>'The book gallery is require'
+        ];
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,7 +41,7 @@ class BookRequest extends FormRequest
                     'category_id'=>['required','exists:categories,id'],
                     'book_cover'=>['required','image','max:5000'],
                     'book_gallery'=>['required','array'],
-                    'book_gallery.src.*'=>['required','image','max:5000'],
+                    'book_gallery.*.src'=>['required','image','max:5000'],
 
                 ];
 

@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('authers', function (Blueprint $table) {
             $table->id();
+            $table->string('email')->unique();
+            $table->string('password');
             $table->string('name');
             $table->string('type');
             $table->text('bio');
-            $table->integer('books');
+            $table->integer('books')->default(0);
             ///// auther image
             $table->timestamps();
         });

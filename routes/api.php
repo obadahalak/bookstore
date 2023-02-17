@@ -4,9 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\CategoryController;
 use  App\Http\Controllers\Api\bookController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\auther\AuthAutherController;
 
 
 ////configuration ///
@@ -27,8 +28,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'authUser');
     Route::post('/user', 'createUser');
 
-    Route::get('/getUser', 'getUser')->middleware('auth:sanctum');
-    Route::post('/update-user', 'update')->name('updateUser')->middleware('auth:sanctum');
+    Route::get('/getUser', 'getUser')->middleware('auth:user');
+    Route::post('/update-user', 'update')->name('updateUser')->middleware('auth:user');
 
 
     Route::get('/users', 'users');
@@ -38,8 +39,8 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(HomeController::class)->group(function () {
 
 
-    Route::get('/homePage','homePage');
-   // Route::get('/newBooks', 'newBooks');
+    Route::get('/homePage', 'homePage');
+    // Route::get('/newBooks', 'newBooks');
     Route::get('/bestRating', 'bestRating');
     Route::get('/authors', 'authors');
 });
@@ -60,5 +61,19 @@ Route::controller(bookController::class)->group(function () {
 
     Route::get('/books', 'books');
     Route::get('/book/{id}', 'book');
-    Route::post('/store-book', 'store');
+});
+
+
+Route::prefix('auther')->group(function () {
+
+    Route::controller(AuthAutherController::class)->group(function () {
+        Route::get('/login', 'login');
+        Route::post('/register', 'createAuther');
+
+        Route::middleware('auth:auther')->group(function () {
+            Route::post('/store-book', 'store');
+            Route::post('/update-profile',  'update')->name('updateAuther');
+            Route::get('/myBooks',  'myBooks')->name('myBooks');
+        });
+    });
 });
