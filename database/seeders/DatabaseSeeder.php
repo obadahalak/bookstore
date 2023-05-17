@@ -39,12 +39,12 @@ class DatabaseSeeder extends Seeder
         ->has(
             Image::factory()
                 ->count(1)
-                ->state(function (array $attributes, User $category) {
+                ->state(function (array $attributes, User $Category) {
                     return ['type' => ''];
                 })
         )->create()->each(function($user) use ($roles){
             $user->assignRole($roles[random_int(0,1)]);
-        });ServiceProvider.php
+        });
         
         Category::factory(8)->create();
 
