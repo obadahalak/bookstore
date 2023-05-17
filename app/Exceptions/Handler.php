@@ -2,8 +2,12 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use function PHPUnit\Framework\matches;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,5 +50,22 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+    public function render($request, Throwable $e)
+    {
+      
+        if($e instanceof ModelNotFoundException){
+
+            $model=match($e->getModel()){
+                'App\\Models\\User' =>'User',
+                default=>'record'
+            };
+            return response()->json(['error'=>"$model not found"]);
+        }
+        if($e instanceof NotFoundHttpException){
+            $message=$e->getMessage();
+            return response()->json(['error'=>"$message "]);
+        }
+        parent::render($request,$e);
     }
 }

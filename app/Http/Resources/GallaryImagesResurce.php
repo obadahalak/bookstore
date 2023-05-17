@@ -15,7 +15,7 @@ class GallaryImagesResurce extends JsonResource
     public function toArray($request)
     {
         return [
-           'file'=>'https://aurora-team.com/bookStore'.$this->file,
+           'file'=>$this->file,
         ];
     }
 }

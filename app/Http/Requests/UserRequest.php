@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\RequiredIf;
 
 class UserRequest extends FormRequest
 {
@@ -24,61 +26,63 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        $userRules = [
-            'name' => ['required', 'min:3', 'max:20'],
-            'email' => ['required', 'unique:users,email'],
-            'password' => ['required', 'min:6','max:30'],
-            'bio' => ['required'],
-            'address' => ['required'],
-            'image' => ['image', 'max:5000'],
+        
+        $generalRules=[
+            'email'=>['required','email','unique:users,email','max:255'],
+            'password'=>['required','min:6','max:30'],
+            'name'=>['required','alpha_dash','min:3','max:255'],
+            'address'=>['required','max:30'],
+            'auther_type'=>[Rule::requiredIf(request()->query('type')==User::AUTHER)],
+            'bio'=>['sometimes','max:255'], 
+            'new_password'=>['sometimes','min:6','max:30','confirmed'], 
+            'image'=>['sometimes','image','max:5000'],
         ];
-        $updateUserRule=[
-            'old_password'=>'nullable',
-            'new_password'=>['required_with:old_password','min:6','max:30','confirmed'],
+      
+       if($this->routeIs('login')){
+        
+        $generalRules['email'][2]='exists:users,email';
+        
+        return array_slice($generalRules,0,2);
+       }
+       if($this->routeIs('updateUser')){
+        $generalRules['auther_type']=[Rule::RequiredIf(auth()->user()->tokenCan('auther'))];
+        $generalRules['email'][2]='unique:users,email,'.auth()->id();
+        $generalRules['password'][0]= 'sometimes'; // old password
+        $generalRules['password'][1]= 'current_password'; // old password
+        return $generalRules;
+
+       }
+       if($this->routeIs('forgetPassword')){
+        $generalRules['email'][2]='';
+        return array_slice($generalRules,0,1);
+       }
+       if($this->routeIs('verifyCode')){
+
+
+        return [
+           
+            'token'=>['required','bail',function($attribute,$value,$fail){
+                    if(!User::Where('rest_token',$value)->where('reset_token_expiration','>',now())->first()){
+                       $fail('Token invalid or expired');
+                    }
+            }],
+            'password'=>['required','min:6','max:30','confirmed'],
         ];
-        switch ($this->method()) {
-            case 'GET':
+        
+        
+       
 
-                return [
-                    'email' => ['required', 'email', 'exists:users,email'],
-                    'password' => 'required',
-                ];
-                break;
-
-            case 'POST':
-                if($this->route()->getName()=='updateUser'){
-                    $userRules['email'][1]='unique:users,email,'.auth()->user()->id;
-                    $userRules['password'][0]='nullable';
-                    return [ ... $updateUserRule, ...$userRules];
-                }
-                return [
-                    'name' => ['required', 'min:3', 'max:20'],
-                    'email' => ['required', 'unique:users,email'],
-                    'password' => ['required', 'min:5'],
-                    'bio' => ['required'],
-                    'address' => ['required'],
-                    'image' => ['image', 'max:5000'],
-                ];
-
-                break;
-        }
     }
-
+        if($this->routeIs('account')){
+            // $rules=array_merge($generalRules,['type'=>Rule::in(1,2)]);
+            return $generalRules;
+        }
+}
     public function messages()
     {
-
-        switch ($this->method()) {
-            case 'GET':
-                return [
-                    'email.exists' => 'email or password not correct',
-                ];
-                break;
-
-            case 'POST':
-                return [
-                    ////default messages
-                ];
-                break;
-        }
+        
+        return [];
     }
+    
+    
 }

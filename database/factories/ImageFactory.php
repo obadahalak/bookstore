@@ -18,6 +18,7 @@ class ImageFactory extends Factory
     {
         return [
             'file'=>$this->faker->imageUrl(600,600),
+            'filename'=>'test',
         ];
     }
 }

@@ -6,11 +6,13 @@ namespace Database\Seeders;
 use App\Models\Tag;
 use App\Models\Book;
 use App\Models\User;
+use App\Models\Admin;
+use Spatie\Permission\Models\Role;
 use App\Models\Image;
-// use PharIo\Manifest\Author;
 use App\Models\Auther;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,35 +23,41 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $roles=[
+            'author','user'
+        ];
+         Role::create(['name' => 'author']);
 
-        User::factory(1)
+         Role::create(['name'=>'user']);
+     
+
+        Admin::create([
+            'email'=>'admin@example.com',
+            'password'=>Hash::make('password'),
+        ]);
+        User::factory(7)
         ->has(
             Image::factory()
                 ->count(1)
                 ->state(function (array $attributes, User $category) {
                     return ['type' => ''];
                 })
-        )->create();
+        )->create()->each(function($user) use ($roles){
+            $user->assignRole($roles[random_int(0,1)]);
+        });
+        
+        Category::factory(8)->create();
 
-        Tag::factory(7)->create();
-        Category::factory(8)
-            ->has(
-                Image::factory()
-                    ->count(1)
-                    ->state(function (array $attributes, Category $category) {
-                        return ['type' => ''];
-                    })
-            )->create();
-
-
-            Auther::factory(10)->hasImage(1,['type'=>''])->create();
 
             $book=Book::factory()->count(50)->hasImages(4,['type'=>'gallary'])
 
-           ->hascoverImage(1,['type'=>'cover']);
+           ->hascoverImage(1,['type'=>'cover'])
+           ->hasbookFile(1,[
+            'type'=>'file',
+            'file'=>'https://via.placeholder.com/600x600.pdf'
+           ]);
 
            $book->create();
-        //    $book->hasImages(4,['type'=>'gallary'])->create();
-        //    $gallaryImage->create();-
+        
     }
 }

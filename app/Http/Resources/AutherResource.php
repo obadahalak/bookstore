@@ -20,7 +20,7 @@ class AutherResource extends JsonResource
             'bio'=>$this->bio,
             'type'=>$this->type,
             'countOfBooks'=>$this->books,
-            'image'=>$this->image->file,
+            'image'=>$this->getImage(),
         ];
     }
 }

@@ -16,11 +16,15 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('bio');
-            $table->string('address');
             $table->string('email')->unique();
+            $table->text('address');
             $table->string('password');
-            $table->rememberToken();
+            // $table->string('role');
+            $table->string('type')->nullable();
+            $table->text('bio')->nullable();
+            $table->integer('books')->default(0);
+            $table->string('rest_token')->nullable()->unique();
+            $table->timestamp('reset_token_expiration')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Models\Tag;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 
 class Category extends Model
 {
@@ -23,4 +24,5 @@ class Category extends Model
         return $this->belongsTo(Tag::class);
     }
 
+   
 }

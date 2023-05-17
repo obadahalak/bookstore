@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Book;
+use App\Models\User;
+use App\Rules\likeRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BookRequest extends FormRequest
@@ -30,22 +33,57 @@ class BookRequest extends FormRequest
      */
     public function rules()
     {
-
-        switch ($this->method()) {
-            case 'POST':
-                return [
-                    'name' => ['required','min:3','max:255'],
-                    'details' => ['required','min:3','max:255'],
-                    'overview' => ['required','min:3','max:255'],
-                    'auther_id'=>['required','exists:authers,id'],
-                    'category_id'=>['required','exists:categories,id'],
-                    'book_cover'=>['required','image','max:5000'],
-                    'book_gallery'=>['required','array'],
-                    'book_gallery.*.src'=>['required','image','max:5000'],
-
-                ];
-
-                break;
+        $generalRules=[
+            'name' => ['required','min:3','max:255'],
+            // 'details' => ['required','min:3','max:255'],
+            'overview' => ['required','min:3','max:255'],   
+            'category_id'=>['required','exists:categories,id'],
+            'book_cover'=>['required','image','max:5000'],
+            'book_gallery'=>['required','array'],
+            'book_gallery.*.src'=>['required','image','max:5000'],
+            'book_file'=>['required','mimes:pdf','max:50000']
+        ];
+        if($this->routeIs('bookByCategory')){
+        
+            return [
+                'category_id'=>['required','exists:categories,id'],
+            ];
         }
+
+        if($this->routeIs('book.store'))
+            return $generalRules;
+        
+            if($this->routeIs('book.show'))
+            return ['book_id'=>['required','exists:books,id']];
+        
+        if($this->routeIs('wishlist')){
+            
+              return  [
+                  'status'=>['required','boolean'],
+                  'book_id'=>['required',new likeRule($this->status)],
+            ];
+        
+        }  
+        if($this->routeIs('publish')){
+         
+            return  [
+                'book_id'=>['required','exists:books,id'],
+                'status'=>['required','boolean',function($attribute,$value,$fail){
+                       if(Book::find($this->book_id)->active==$value){
+                        $message=$this->status=="1"? 'aleady published':' aleady disabled';
+                        $fail('book already ' .$message);
+                       }
+                }],
+          ];
+      
+      }        
+        if($this->routeIs('evaluateBook')){
+          
+            return  [
+                'value'=>['required','integer','min:1','max:5'],
+                'book_id'=>['required','exists:books,id'],
+          ];
+      
+      }        
     }
 }

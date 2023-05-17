@@ -4,13 +4,15 @@ namespace App\Models;
 
 use App\Models\Book;
 use App\Models\Image;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Auther extends Model
+class Auther extends Authenticatable
 {
-    use HasFactory;
-
+    use  HasFactory;
     public $guarded = [];
 
 
@@ -19,6 +21,17 @@ class Auther extends Model
     }
 
     public function books(){
+        return $this->hasMany(Book::class,'auther_id');
+    }
+
+    public function myBooks(){
         return $this->hasMany(Book::class);
+    }
+
+    public function password(): Attribute
+    {
+        return new Attribute(
+            set: fn ($value) =>Hash::make($value),
+        );
     }
 }

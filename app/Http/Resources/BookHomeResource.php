@@ -17,7 +17,7 @@ class BookHomeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'details' => $this->details,
+            // 'details' => $this->details,
             'image' => $this->coverImage->file,
         ];
     }

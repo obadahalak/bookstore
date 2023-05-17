@@ -2,27 +2,31 @@
 
 namespace App\Http\Controllers\Api;
 
-use  App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\TagResource;
-use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use App\traits\CategoryActions;
+use App\Http\Resources\TagResource;
+use Illuminate\Pagination\Paginator;
+use  App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\CategoryResource;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryController extends Controller
 {
-
-    public function tags()
-    {
-        return TagResource::collection(Tag::latest()->paginate(10));
+    use CategoryActions;
+    public function store(CategoryRequest $request){
+        return $this->cretae($request->all());
     }
-    public function categories()
-    {
-        return CategoryResource::collection(Category::with('tag')->latest()->paginate(10));
-    }
+    public function categories(){   
 
-    public function categoriesByTag($tagid)
-    {
+       $data=  Cache::rememberForever('categories',function(){
 
-        return CategoryResource::collection(Category::where('tag_id', $tagid)->paginate(10));
-    }
+            return CategoryResource::collection(Category::inRandomOrder()->paginate(10)); 
+        });
+        return $data;
+    } 
+
 }

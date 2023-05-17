@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     use HasFactory;
+    
 
-    protected $gurded=[];
+    protected $guarded=[];
 
     /**
      * Get the parent imageable model (user or post).

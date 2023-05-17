@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\auther;
 use App\Models\category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,11 +21,12 @@ class bookFactory extends Factory
     {
         return [
             'name'=>$this->faker->jobTitle(),
-            'details'=>$this->faker->realTextBetween(50,100),
+            // 'details'=>$this->faker->realTextBetween(50,100),
             'overview'=>$this->faker->realTextBetween(100,200),
             'rating'=>random_int(1,5),
-            'auther_id'=>auther::inRandomOrder()->get()->value('id'),
+            'user_id'=>User::inRandomOrder()->get()->value('id'),
             'category_id'=>category::inRandomOrder()->get()->value('id'),
+            'active'=>1,
         ];
     }
 }

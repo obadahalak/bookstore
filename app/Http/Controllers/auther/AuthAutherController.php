@@ -24,7 +24,6 @@ class AuthAutherController extends Controller
     {
        $book=auth('auther')->user()->books()->create([
             'name' => $request->name,
-            'details' => $request->details,
             'overview' => $request->overview,
             'category_id' => $request->category_id,
             'rating' => 1,

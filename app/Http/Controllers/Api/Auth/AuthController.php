@@ -2,94 +2,134 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Bus\Batch;
+use App\traits\UploadImage;
 use App\Http\Requests\UserRequest;
+use App\Jobs\sendResetPasswordCode;
+use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
-
-use function PHPUnit\Framework\isEmpty;
 
 class AuthController extends Controller
 {
 
-    protected function validationException()
-    {
-        throw ValidationException::withMessages([
-            'email' => ['Email or password not correct'],
+    use UploadImage;
+
+    public function accountRegister(UserRequest $request){
+      
+        $account=User::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'password'=>$request->password,
+            'bio'=>$request->bio,
+            'address'=>$request->address,
+            'role'=>'user',
         ]);
+        $token= $account->createToken('user-Token')->accessToken;
+        $account->assignRole('user');
+        return response()->json(['token' => $token,'ability'=>'user']);
+ 
     }
-    public function createToken($user)
+ 
+    public function authentection(UserRequest $Request)
     {
-
-        $token = $user->createToken('test')->accessToken;
-
-        return response()->json(['token' => $token]);
-    }
-    public function createUser(UserRequest $Request)
-    {
-        $user = User::create($Request->validated());
-        return $user->createToken('test')->accessToken;
-    }
-
-    public function authUser(UserRequest $Request)
-    {
+       
         $user = User::where('email', $Request->email)->first();
-        if (!$user || !Hash::check($Request->password, $user->password)) {
-            return $this->validationException();
-        } else {
-            return $user->createToken('Token Name')->accessToken;
+        if (!$user || ! Hash::check($Request->password, $user->password)) {
+            return throw ValidationException::withMessages([
+                'email' => ['Email or password not correct'],
+           
+            ]);
         }
+        $token= $user->createToken('user-Token')->accessToken;
+        $user->assignRole('user');
+        return response()->json(['token' => $token,'ability'=>'user']);
+    }
+  
+   
+  public function sendResetPasswordCode(UserRequest $request){
+
+    
+    
+     $batch = Bus::batch(
+        
+         new sendResetPasswordCode($request->email)
+        
+        )->then(function (Batch $batch) {
+        
+    })->dispatch();
+     
+    return response()->json(['message'=>'If this email is already registered, an email will be sent to your mail to retrieve your password']);
+
+   
+  } 
+
+    public function codeCheck(UserRequest $request){
+    
+    $user=User::firstWhere('rest_token', $request->token);   
+    
+    $user->update([
+        'password'=>$request->password,
+        'rest_token'=> null,
+        'reset_token_expiration' => null,
+    ]); 
+        return response()->json(['message' => 'Password updated successful']);
+
+        
     }
 
-    public function getUser()
-    {
-        return  new UserResource(auth('user')->user());
+    public function profile(){
+        return Cache::rememberForever(auth()->user()->email,function(){
+
+            return new UserResource(auth()->user());
+        });
+
+}
+
+    public function updateUserImage($requestImage,$user){
+        
+        $updateOrCreate=$user->image ? 'update': 'create';
+        $updateOrCreate == 'update'? $this->unlinkImage($user->image->filename,'UserProfileImages')  :true;
+        $uploadImage=$this->uploadSingleImage($requestImage,'UserProfileImages');
+             
+        $user->image()->$updateOrCreate([
+                'file' =>$uploadImage['url'],
+                'filename'=>$uploadImage['filename'],
+            ]);
+          return response()->json(['message'=>''.$updateOrCreate.' profile updated successfully']);  
     }
-    public function cheackOldPassword($old_password, $userPassword)
-    {
-        if (Hash::check($old_password, $userPassword)) return  true;
-        return false;
-    }
+
     public function update(UserRequest $request)
     {
-        $return = [];
-        $user = auth('user')->user();
-
-        $user->update([
-            'name' => $request->name,
-            'bio' => $request->bio,
-            'email' => $request->email,
-            'address' => $request->address,
-        ]);
-        $return['profile'] = 'user profile updated successfully';
-        if ($request->old_password) {
-            if ($this->cheackOldPassword($request->old_password, auth('user')->user()->password)) {
-
-                $user->update([
-                    'password' => $request->new_password,
-                ]);
-
-                $return['password'] = 'user password changed successfully';
-            }
-        }
-        if($request->image){
-                $path=$request->image->store('userImages','public');
-                $user->image()->create([
-                    'file'=>'public/'.$path
-                ]);
-                $return['image'] = 'image profile updated successfully';
-        }
-        return response()->json($return);
+       
+            $return = [];
+            $user = auth('user')->user();
+            $updateInformation=[
+                'name' => $request->name,
+                'email' => $request->email,
+                'bio' => $request->bio,
+                'address' => $request->address,
+                'type' => $request->auther_type,
+            ];
+            
+            if($request->filled('new_password'))
+                $updateInformation=  array_merge($updateInformation,['password'=> $request->new_password ]);
+            
+            $user->update($updateInformation);
+            $return=['message'=>'information updated sucessfully.'];    
+       
+        if(isset($request->image)) 
+         return $this->updateUserImage($request->image, $user) ;
+        return  response()->json($return);
+        
+        
+         
     }
-
-
-    public function users()
-    {
-        return User::all();
-    }
+    
 }
+    

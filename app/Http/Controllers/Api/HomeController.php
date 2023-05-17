@@ -5,36 +5,32 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Models\book;
+use App\Models\User;
 use App\Models\Auther;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\HomeResource;
 use  App\Http\Controllers\Controller;
 use App\Http\Resources\AutherResource;
-use App\Http\Resources\HomeResource;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
 
-
-    public function homePage()
+    public function index()
     {
-        return response()->json(
+        // return  AutherResource::collection(User::Author()->with(['image'])->inRandomOrder()->take(5)->get());
+      $homepage= Cache::remember('homepage',60,function(){
+        return $homepage=[
+            'NEW BOOKS'=>
+            BookResource::collection(book::with(['Images','coverImage'])->latest()->take(5)->get()),
+            'TOP RATING'=>
+            BookResource::collection(book::with(['Images','coverImage'])->orderby('rating')->take(5)->get()),
+      
+          ];
 
-            [
-                'tags' =>
-                ['id' => 1, 'tagName' => 'NEW BOOKS', 'BOOKS' => book::with('coverImage')->take(5)->get()],
-                ['id' => 1, 'tagName' => 'TOP RATING', 'BOOKS' => book::with('coverImage')->orderBy('rating', 'desc')->take(5)->get()]
-            ]
-        );
+        });
+        return response()->json($homepage);
     }
-    public function bestRating()
-    {
-        return BookResource::collection(Book::with(['coverImage', 'Images'])->orderBy('rating', 'desc')->paginate(4));
-    }
+   
 
-    public function authors()
-    {
-
-        return AutherResource::collection(Auther::with(['image'])->paginate(10));
-
-    }
 }
