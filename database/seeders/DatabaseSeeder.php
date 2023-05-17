@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
                 })
         )->create()->each(function($user) use ($roles){
             $user->assignRole($roles[random_int(0,1)]);
-        });
+        });ServiceProvider.php
         
         Category::factory(8)->create();
 
