@@ -51,21 +51,21 @@ class Handler extends ExceptionHandler
             //
         });
     }
-    public function render($request, Throwable $e)
-    {
+    // public function render($request, Throwable $e)
+    // {
       
-        if($e instanceof ModelNotFoundException){
+    //     if($e instanceof ModelNotFoundException){
 
-            $model=match($e->getModel()){
-                'App\\Models\\User' =>'User',
-                default=>'record'
-            };
-            return response()->json(['error'=>"$model not found"]);
-        }
-        if($e instanceof NotFoundHttpException){
-            $message=$e->getMessage();
-            return response()->json(['error'=>"$message "]);
-        }
-        parent::render($request,$e);
-    }
+    //         $model=match($e->getModel()){
+    //             'App\\Models\\User' =>'User',
+    //             default=>'record'
+    //         };
+    //         return response()->json(['error'=>"$model not found"]);
+    //     }
+    //     if($e instanceof NotFoundHttpException){
+    //         $message=$e->getMessage();
+    //         return response()->json(['error'=>"$message "]);
+    //     }
+    //     parent::render($request,$e);
+    // }
 }
