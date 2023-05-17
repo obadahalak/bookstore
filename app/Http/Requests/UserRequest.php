@@ -31,7 +31,7 @@ class UserRequest extends FormRequest
             'email'=>['required','email','unique:users,email','max:255'],
             'password'=>['required','min:6','max:30'],
             'name'=>['required','alpha_dash','min:3','max:255'],
-            'address'=>['required','max:30'],
+          
             'auther_type'=>[Rule::requiredIf(request()->query('type')==User::AUTHER)],
             'bio'=>['sometimes','max:255'], 
             'new_password'=>['sometimes','min:6','max:30','confirmed'], 

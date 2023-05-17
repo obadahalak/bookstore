@@ -27,7 +27,7 @@ class UserFactory extends Factory
         
             'bio' => fake()->realText(100),
             
-            'address' => fake()->realText(100),
+        
             'email' => fake()->unique()->safeEmail(),
             // 'email_verified_at' => now(),
             // 'role'=>random_int(1,2),

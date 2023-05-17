@@ -28,7 +28,7 @@ class AuthController extends Controller
             'email'=>$request->email,
             'password'=>$request->password,
             'bio'=>$request->bio,
-            'address'=>$request->address,
+            
             'type'=>'user',
             // 'role'=>'user',
         ]);
@@ -115,7 +115,6 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'bio' => $request->bio,
-                'address' => $request->address,
                 'type' => $request->auther_type,
             ];
             

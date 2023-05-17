@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'name'=>$this->name,
             'email'=>$this->email,
             'bio'=>$this->bio,
-            'address'=>$this->address,
+           
             'image'=>$this->getImage(),
         ];
         if(auth()->user()->tokenCan('auther')){
