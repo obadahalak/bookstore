@@ -22,13 +22,15 @@ class AuthController extends Controller
 
     public function accountRegister(UserRequest $request){
       
+        // dd($request->all());
         $account=User::create([
             'name'=>$request->name,
             'email'=>$request->email,
             'password'=>$request->password,
             'bio'=>$request->bio,
             'address'=>$request->address,
-            'role'=>'user',
+            'type'=>'user',
+            // 'role'=>'user',
         ]);
         $token= $account->createToken('user-Token')->accessToken;
         $account->assignRole('user');
@@ -61,7 +63,7 @@ class AuthController extends Controller
          new sendResetPasswordCode($request->email)
         
         )->then(function (Batch $batch) {
-        
+        // Log::info('bb');
     })->dispatch();
      
     return response()->json(['message'=>'If this email is already registered, an email will be sent to your mail to retrieve your password']);
