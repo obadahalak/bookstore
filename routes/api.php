@@ -1,12 +1,7 @@
 <?php
 
 
-use App\Models\Category;
-use App\Actions\PayPalMethod;
-use Vaites\ApacheTika\Client;
-use App\Http\Services\PaymentService;
 use Illuminate\Support\Facades\Route;
-use PharIo\Manifest\AuthorCollection;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\WishlistController;
@@ -14,7 +9,6 @@ use  App\Http\Controllers\Api\bookController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Models\User;
 
 
 
