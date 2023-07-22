@@ -67,7 +67,7 @@ Route::controller(WishlistController::class)->middleware('role:user')->prefix('w
 Route::controller(bookController::class)->prefix('books')->group(function(){
     Route::get('/seeMore','getBooks');
     Route::get('/','index');
-    Route::get('/{id}','show')->name('book.show');
+    Route::get('/{book:id}','show')->name('book.show');
     Route::get('/{Author_id}','author_books');
     Route::get('filter','bookByCategoryId')->name('bookByCategory');
     Route::post('create','store')->name('book.store')->middleware('role:author');

@@ -67,9 +67,9 @@ class bookController extends Controller
             ]);
     
     }
-    public function show($book_id)
+    public function show(Book $book)
     {
-        return new  BookResource(Book::Active()->with(['Images'])->find($book_id));
+        return new  BookResource(Book::Active()->with(['Images'])->find($book->id));
     }
     public function bookByCategoryId(BookRequest $request)
     {

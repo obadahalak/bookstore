@@ -35,7 +35,7 @@ class BookRequest extends FormRequest
     {
         $generalRules=[
             'name' => ['required','min:3','max:255'],
-            // 'details' => ['required','min:3','max:255'],
+            'page_count'=>['required','min:1'],
             'overview' => ['required','min:3','max:255'],   
             'category_id'=>['required','exists:categories,id'],
             'book_cover'=>['required','image','max:5000'],
@@ -53,8 +53,7 @@ class BookRequest extends FormRequest
         if($this->routeIs('book.store'))
             return $generalRules;
         
-            if($this->routeIs('book.show'))
-            return ['book_id'=>['required','exists:books,id']];
+           
         
         if($this->routeIs('wishlist')){
             
