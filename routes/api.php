@@ -11,19 +11,17 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\WishlistController;
 use  App\Http\Controllers\Api\bookController;
-use App\Http\Controllers\Api\AutherController;
+use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Models\User;
 
 
 
 ////configuration ///
-Route::get('/seeder', function () {
-    Category::create([
-        'title'=>'222',
-        'count_of_books'=>0,
-    ]);
-    // Artisan::call('migrate:fresh --seed');
+Route::get('/setup', function () {
+    
+    Artisan::call('migrate:fresh --seed');
 });
 
 
@@ -33,10 +31,7 @@ Route::get('/clear', function () {
 });
 
 
-Route::get('/payment', function () {
-   $paymentService=new PaymentService(); 
-   return $paymentService->payment(new PayPalMethod);
-});
+
 
 
 
@@ -69,9 +64,11 @@ Route::controller(WishlistController::class)->middleware('role:user')->prefix('w
                 
 });
 /// books endpoints ////   
-Route::controller(bookController::class)->prefix('book')->group(function(){
-    Route::get('all','index');
-    Route::get('find','show')->name('book.show');
+Route::controller(bookController::class)->prefix('books')->group(function(){
+    Route::get('/seeMore','getBooks');
+    Route::get('/','index');
+    Route::get('/{id}','show')->name('book.show');
+    Route::get('/{Author_id}','author_books');
     Route::get('filter','bookByCategoryId')->name('bookByCategory');
     Route::post('create','store')->name('book.store')->middleware('role:author');
     Route::get('bestRating','bestRating');
@@ -89,10 +86,12 @@ Route::controller(HomeController::class)->prefix('/homepage')->group(function ()
 });
 
 
-Route::controller(AutherController::class)->prefix('author')->group(function(){
-    Route::get('/all', 'authors');
+Route::controller(AuthorController::class)->prefix('authors')->group(function(){
+    Route::get('/typesOfAuthors','types');
+    Route::get('/', 'authors');
     Route::get('/find', 'author');
-    Route::get('/{user:id}','test');
+    Route::get('books','books');
+    // Route::get('/{user:id}','test');
 });
 
 /// categories endpoints ////

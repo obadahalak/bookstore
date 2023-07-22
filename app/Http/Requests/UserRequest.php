@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             'password'=>['required','min:6','max:30'],
             'name'=>['required','alpha_dash','min:3','max:255'],
           
-            'auther_type'=>[Rule::requiredIf(request()->query('type')==User::AUTHER)],
+            'Author_type'=>[Rule::requiredIf(request()->query('type')==User::Author)],
             'bio'=>['sometimes','max:255'], 
             'new_password'=>['sometimes','min:6','max:30','confirmed'], 
             'image'=>['sometimes','image','max:5000'],
@@ -45,7 +45,7 @@ class UserRequest extends FormRequest
         return array_slice($generalRules,0,2);
        }
        if($this->routeIs('updateUser')){
-        $generalRules['auther_type']=[Rule::RequiredIf(auth()->user()->tokenCan('auther'))];
+        $generalRules['Author_type']=[Rule::RequiredIf(auth()->user()->tokenCan('Author'))];
         $generalRules['email'][2]='unique:users,email,'.auth()->id();
         $generalRules['password'][0]= 'sometimes'; // old password
         $generalRules['password'][1]= 'current_password'; // old password

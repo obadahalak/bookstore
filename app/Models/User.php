@@ -21,7 +21,7 @@ class User extends Authenticatable
 
 
     const VISITOR=1;
-    const AUTHER=2;
+    const Author=2;
     /**
      * The attributes that are mass assignable.
      *
@@ -34,7 +34,7 @@ class User extends Authenticatable
         'password',
         'role',
         'type',
-        'books',
+        'count_of_books',
         'rest_token',
         'reset_token_expiration'
     ];
@@ -90,6 +90,6 @@ class User extends Authenticatable
         return  $this->belongsToMany(Book::class,'evaluations')->withTimestamps();
     }
     public function scopeAuthor($q){
-        return $q->role('author')->get();
+        return $q->role('author');
     }
 }

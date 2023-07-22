@@ -14,6 +14,7 @@
         "setasign/fpdi": "^2.3",
         "spatie/laravel-permission": "^5.10",
         "spatie/laravel-route-attributes": "^1.18",
+        "staudenmeir/eloquent-eager-limit": "^1.0",
         "vaites/php-apache-tika": "^1.2"
     },
     "require-dev": {

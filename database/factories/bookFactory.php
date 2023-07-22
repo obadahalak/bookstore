@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\auther;
+use App\Models\Author;
 use App\Models\category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;

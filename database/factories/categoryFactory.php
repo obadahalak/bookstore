@@ -6,7 +6,7 @@ use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\auther>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Author>
  */
 class categoryFactory extends Factory
 {

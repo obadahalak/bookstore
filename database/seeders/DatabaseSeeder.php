@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\Admin;
 use Spatie\Permission\Models\Role;
 use App\Models\Image;
-use App\Models\Auther;
+use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -23,8 +23,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $roles=[
-            'author','user'
+        $types=[
+            'Novelist',
+            'Poet',
+            'Songwriter',
+            'Blogger',
+            'Business writer',
+            'Ghostwriter'
         ];
          Role::create(['name' => 'author']);
 
@@ -35,17 +40,28 @@ class DatabaseSeeder extends Seeder
             'email'=>'admin@example.com',
             'password'=>Hash::make('password'),
         ]);
-        User::factory(7)
+
+        User::factory(3)
         ->has(
             Image::factory()
                 ->count(1)
                 ->state(function (array $attributes, User $Category) {
-                    return ['type' => ''];
+                    return ['type' => null];
                 })
-        )->create()->each(function($user) use ($roles){
-            $user->assignRole($roles[random_int(0,1)]);
+        )->create()->each(function($user) {
+            $user->assignRole('user');
         });
         
+        User::factory(20)
+        ->has(
+            Image::factory()
+                ->count(1)
+               
+        )->create()->each(function($user) use($types) {
+            $user->assignRole('author');
+            // $user->type='dd';
+        });
+
         Category::factory(8)->create();
 
 

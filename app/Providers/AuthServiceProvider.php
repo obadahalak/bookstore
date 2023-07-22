@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {  Passport::tokensCan([
-        'auther' => 'auther scope',
+        'Author' => 'Author scope',
         'visitor' => 'user scope',
     ]);
         $this->registerPolicies();

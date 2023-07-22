@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BookResource;
 use  App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Support\Facades\Request;
+// use Illuminate\Support\Facades\Artisan
 class bookController extends Controller
 {
 
@@ -23,17 +24,52 @@ class bookController extends Controller
         return response()->json(['message'=>'Your book has been submitted to the admin successfully. Wait for it to be activated '],201);
     }
 
+    
+    
     public function index()
     {
-      $data= Cache::rememberForever('books',function(){
-
-            return BookResource::collection(Book::Active()->latest()->paginate(10));
-        });
-        return $data;
+        $category=Category::query();
+        $category->with(['books'=> function($q){
+            $q->limit(3);
+        }]);
+        
+        if(isset(request()->search)){
+             
+             $category->whereHas('books',function($query){
+                $query->where('name','LIKE','%'.request()->search.'%');
+            });
+        }    
+        
+        return response()->paginate($category->paginate(5));
+    
+        
     }
-    public function show(BookRequest $request)
+    public function getBooks(){
+        
+        $category=Category::whereId(request()->category_id)->first();
+        $Book=Book::where('category_id',request()->category_id)
+        ->skip(request()->skip)->take(3)
+        ->where('name','LIKE','%'.request()->name.'%')
+        ->get();
+        if(  (request()->skip *=2) >=$category->books()->count()  )
+            
+               
+            return response()->json([
+                'data'=>BookResource::collection($Book),
+                'status'=>false,
+            ]); 
+        
+    
+
+            return response()->json([
+                'data'=>BookResource::collection($Book),
+                'status'=>true,
+            ]);
+    
+    }
+    public function show($book_id)
     {
-        return new  BookResource(Book::Active()->find($request->book_id));
+        return new  BookResource(Book::Active()->with(['Images'])->find($book_id));
     }
     public function bookByCategoryId(BookRequest $request)
     {

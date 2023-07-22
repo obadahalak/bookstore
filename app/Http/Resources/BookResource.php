@@ -14,33 +14,20 @@ class BookResource extends JsonResource
      */
     public function toArray($request)
     {
-        // if ($request->routeIs('myBooks')) {
-
-        //     return [
-        //         'id' => $this->id,
-        //         'name' => $this->name,
-        //         'details' => $this->details,
-        //         'overview' => $this->overview,
-        //         'rate' => $this->rating,
-        //         'category' => $this->category->name,
-        //         'coverImage' => $this->coverImage->file ?? null,
-        //         'gallaryImage' => GallaryImagesResurce::collection($this->Images),
-        //         'category_name' =>'https://aurora-team.com/bookStore'.$this->category->name,
-        //     ];
-        // }
-        // }
+       
         return [
 
             'id' => $this->id,
             'name' => $this->name,
             'overview' => $this->overview,
-            'rate' => $this->rating,
-            'auther' => $this->user->name,
+            'rating' => $this->rating,
+            'author' => $this->user->name,
             'category' => $this->category->title,
-            'coverImage' => $this->coverImage?->file,
+            'pages'=>400,
+            'coverImage' => $this->coverImage->file,
             'gallaryImage' => GallaryImagesResurce::collection($this->whenLoaded('Images')),
-            'book'=>$this->bookFile?->file,
-
+            'book'=>$this->bookFile->file,
+            'is_like'=>$this->is_like(),
         ];
     }
 }

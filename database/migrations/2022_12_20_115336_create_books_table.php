@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Auther;
+use App\Models\Author;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // $table->text('details');
+          
             $table->longText('overview');
             $table->double('rating')->default(1);
             $table->boolean('active')->default(0);

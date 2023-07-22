@@ -22,10 +22,10 @@ class UserResource extends JsonResource
            
             'image'=>$this->getImage(),
         ];
-        if(auth()->user()->tokenCan('auther')){
+        if(auth()->user()->tokenCan('Author')){
               
             $data=array_merge($data,[
-                'auther_type'=>$this->type,
+                'Author_type'=>$this->type,
                 'count_books'=>$this->books,
             ]);
         }

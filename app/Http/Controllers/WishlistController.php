@@ -34,7 +34,7 @@ class WishlistController extends Controller
                     'b.id as id','b.name as name'
                     ,'b.overview as overview'
                     ,'b.rating as rating'
-                    ,'u.name as auther'
+                    ,'u.name as Author'
                     ,'c.title as category'
                     ,'images.file'
                    

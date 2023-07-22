@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AutherRequest extends FormRequest
+class AuthorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class AutherRequest extends FormRequest
     public function rules(){
         return [
             'id'=>['required',function($attribute,$value,$fail){
-                    if(!User::where('id',$value)->first()->role==User::AUTHER){
+                    if(!User::where('id',$value)->first()->role==User::Author){
                         $fail('author not found ');
                     }
             }],

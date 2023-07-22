@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\Image;
-use App\Models\Auther;
+use App\Models\Author;
 use App\Models\Category;
 use App\Models\Evaluation;
 use App\enum\NotificationMessage;
@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Book extends Model
 {
-    use HasFactory ;
+
+    use HasFactory  , \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 
     protected $guarded= [];
     CONST  ACTIVE=1;
@@ -54,6 +55,9 @@ class Book extends Model
 
     public function scopeActive($q){
         return $q->where('active',self::ACTIVE);
+    }
+    public function is_like(){
+        return $this->likes->contains('user_id',auth()->id());
     }
 
 }

@@ -22,7 +22,7 @@ return new class extends Migration
             // $table->string('role');
             $table->string('type')->nullable();
             $table->text('bio')->nullable();
-            $table->integer('books')->default(0);
+            $table->integer('count_of_books')->default(0);
             $table->string('rest_token')->nullable()->unique();
             $table->timestamp('reset_token_expiration')->nullable();
             $table->timestamps();

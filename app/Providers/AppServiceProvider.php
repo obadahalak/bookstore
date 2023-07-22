@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +22,19 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        ini_set('memory_limit', '100M');
+    public function boot(){
+        Response::macro('paginate', function ($data) {
+    
+    
+        return Response::make([
+            'data'=>$data->items(),
+            'meta'=>[
+                'current_page'=>$data->currentPage(),
+                'last_page'=>$data->lastPage(),
+                'per_page'=>$data->perPage(),
+                'total'=>$data->total(),
+            ]
+        ]);
+    });
     }
 }

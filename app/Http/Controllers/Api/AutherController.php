@@ -3,26 +3,45 @@
 namespace App\Http\Controllers\Api;
 
 
-use App\Models\Auther;
-use App\Http\Requests\AutherRequest;
+use App\Models\Author;
+use App\Http\Requests\AuthorRequest;
 use  App\Http\Controllers\Controller;
-use App\Http\Resources\AutherResource;
+use App\Http\Resources\AuthorResource;
 use App\Models\User;
+use GuzzleHttp\Psr7\Request;
 
-class AutherController extends Controller
+class AuthorController extends Controller
 {
     
-    public function test(User $user){
+    // public function test(User $user){
         
-        return $user;
+    //     return $user;
+    // }
+    public function types(){
+        return User::Author()->distinct()->pluck('type');
     }
     public function authors(){
-        return AutherResource::collection(User::Author()->with(['image'])->paginate(10));
+        $authors=User::Author()->with(['image']);
+          $authors->when(request('search'),function($q) use($authors){
+             return $authors->where('name','LIKE','%'.request()->search.'%')->paginate(10);
+        });
+
+        return response()->paginate(AuthorResource::collection($authors->paginate(10)));
     }
 
-    public function author(AutherRequest $request){
-        return new  AutherResource(User::with(['image'])->find($request->id));
+    public function author(){
+        $author=User::Author()->with(['image'])->find(request()->id);
+        if($author)
+            return AuthorResource::make($author);
+            return response()->json (['error'=>'author not found'],404);   
     }
-   
 
+    public function books(){  
+       
+        $author=User::Author()->with(['image','books'])->find(request()->id);
+       
+        return AuthorResource::make($author);
+    }
+
+    
 }

@@ -41,9 +41,9 @@ return [
         //     'provider' => 'users',
         // ],
 
-        'auther' => [
+        'Author' => [
             'driver' => 'passport',
-            'provider' => 'authers',
+            'provider' => 'Authors',
         ],
         'user' => [
             'driver' => 'passport',

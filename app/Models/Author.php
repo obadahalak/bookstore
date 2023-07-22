@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Auther extends Authenticatable
+class Author extends Authenticatable
 {
     use  HasFactory;
     public $guarded = [];
@@ -21,7 +21,7 @@ class Auther extends Authenticatable
     }
 
     public function books(){
-        return $this->hasMany(Book::class,'auther_id');
+        return $this->hasMany(Book::class,'Author_id');
     }
 
     public function myBooks(){
