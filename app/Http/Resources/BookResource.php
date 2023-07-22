@@ -23,7 +23,7 @@ class BookResource extends JsonResource
             'rating' => $this->rating,
             'author' => $this->user->name,
             'category' => $this->category->title,
-            'pages'=>400,
+            'count_pages'=>$this->page_count,
             'coverImage' => $this->coverImage->file,
             'gallaryImage' => GallaryImagesResurce::collection($this->whenLoaded('Images')),
             'book'=>$this->bookFile->file,
