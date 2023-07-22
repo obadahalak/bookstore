@@ -34,7 +34,7 @@ class AuthController extends Controller
         ]);
         $token= $account->createToken('user-Token')->accessToken;
         $account->assignRole('user');
-        return response()->json(['token' => $token,'ability'=>'user']);
+        return response()->json(['token' => $token,'ability'=>'user'],200);
  
     }
  
@@ -115,7 +115,7 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'bio' => $request->bio,
-                'type' => $request->auther_type,
+                'type' => $request->Author_type,
             ];
             
             if($request->filled('new_password'))
