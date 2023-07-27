@@ -24,7 +24,7 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'min:3',
+            'name'=>'min:3|max:255',
         ];
     }
 }
