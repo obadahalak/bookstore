@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -50,32 +51,30 @@ class AuthController extends Controller
      $user=User::where('email',$request->email)->first();
 
     if($user){
-
+        
         $batch = Bus::batch(
             
             new sendResetPasswordCode($request->email)
             
             )->then(function (Batch $batch) {
-                // Log::info('bb');
+              
             })->dispatch();
+            return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
         }
-     
-    return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
-
+        
    
   } 
 
-    public function codeCheck(UserRequest $request){
-    
+    public function update_password(UserRequest $request){
+        
     $user=User::firstWhere('rest_token', $request->token)->first();
     
-    $user->update([
-        'password'=>$request->password,
-        'rest_token'=> null,
-        'reset_token_expiration' => null,
-    ]); 
+        $user->update([
+            'password'=>$request->password,
+            'rest_token'=> null,
+            'reset_token_expiration' => null,
+        ]); 
         return response()->json(['message' => 'Password updated successful']);
-
         
     }
 
@@ -103,9 +102,9 @@ class AuthController extends Controller
     public function update(UserRequest $request)
     {
        
-            $return = [];
+            $response = [];
             $user = auth('user')->user();
-            $updateInformation=[
+            $data=[
                 'name' => $request->name,
                 'email' => $request->email,
                 'bio' => $request->bio,
@@ -113,14 +112,14 @@ class AuthController extends Controller
             ];
             
             if($request->filled('new_password'))
-                $updateInformation=  array_merge($updateInformation,['password'=> $request->new_password ]);
+                $data=  array_merge($data,['password'=> $request->new_password ]);
             
-            $user->update($updateInformation);
-            $return=['message'=>'information updated sucessfully.'];    
+            $user->update($data);
+            $response=['message'=>'information updated sucessfully.'];    
        
         if(isset($request->image)) 
-         return $this->updateUserImage($request->image, $user) ;
-        return  response()->json($return);
+          $this->updateUserImage($request->image, $user) ;
+        return  response()->data($response);
         
         
          

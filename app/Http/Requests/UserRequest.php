@@ -62,7 +62,7 @@ class UserRequest extends FormRequest
            
             'token'=>['required','bail',function($attribute,$value,$fail){
               
-                    if(!User::Where('rest_token',$value)->whereMinute('reset_token_expiration','>',now())->first()){
+                    if(!User::Where('rest_token',$value)->where('reset_token_expiration','>',now())->first()){
                        $fail('Token invalid or expired');
                     }
             }],

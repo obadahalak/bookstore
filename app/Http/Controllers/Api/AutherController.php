@@ -13,12 +13,8 @@ use GuzzleHttp\Psr7\Request;
 class AuthorController extends Controller
 {
     
-    // public function test(User $user){
-        
-    //     return $user;
-    // }
     public function types(){
-        return User::Author()->distinct()->pluck('type');
+        return response()->data(User::Author()->distinct()->pluck('type')); 
     }
     public function authors(){
         $authors=User::Author()->with(['image']);
@@ -33,14 +29,14 @@ class AuthorController extends Controller
         $author=User::Author()->with(['image'])->find(request()->id);
         if($author)
             return AuthorResource::make($author);
-            return response()->json (['error'=>'author not found'],404);   
+            return response()->data(['error'=>'author not found'],422);
     }
 
     public function books(){  
        
         $author=User::Author()->with(['image','books'])->find(request()->id);
        
-        return AuthorResource::make($author);
+        return response()->data(AuthorResource::make($author));
     }
 
     

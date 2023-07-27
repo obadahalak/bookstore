@@ -43,7 +43,7 @@ class sendResetPasswordCode implements ShouldQueue
       
         $user->update([ 
             'rest_token'=>$code,
-            'reset_token_expiration'=>Carbon::now()->addMinutes(15),
+            'reset_token_expiration'=>Carbon::now()->addMinutes(10),
         ]);
         return $code;
     }
