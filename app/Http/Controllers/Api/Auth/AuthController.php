@@ -23,7 +23,7 @@ class AuthController extends Controller
 
     public function store(UserRequest $request){
       
-        $account=User::create($request->ValidatedData());
+        $account=User::create($request->validatedData());
         $token= $account->createToken('user-Token')->accessToken;
         $account->assignRole('user');
         return response()->data(['token'=>$token,'ability'=>'user']);
@@ -41,6 +41,8 @@ class AuthController extends Controller
             ]);
         }
         $token= $user->createToken('user-Token')->accessToken;
+    //     return $user->getRoleNames();
+    // //   return   User::role('author')->get();
         return response()->data(['token'=>$token]);
         
     }
@@ -101,20 +103,14 @@ class AuthController extends Controller
 
     public function update(UserRequest $request)
     {
-       
-            $response = [];
-            $user = auth('user')->user();
-            $data=[
-                'name' => $request->name,
-                'email' => $request->email,
-                'bio' => $request->bio,
-                'type' => $request->Author_type,
-            ];
-            
-            if($request->filled('new_password'))
-                $data=  array_merge($data,['password'=> $request->new_password ]);
-            
-            $user->update($data);
+        $response = [];
+        $user=auth()->user();
+        if( isset($request->type)){
+            $user->assignRole('author');
+
+        }
+           
+            $user->update($request->validatedData());
             $response=['message'=>'information updated sucessfully.'];    
        
         if(isset($request->image)) 

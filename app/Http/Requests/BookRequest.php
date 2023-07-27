@@ -85,4 +85,9 @@ class BookRequest extends FormRequest
       
       }        
     }
+
+    public function validated_data(){
+        $validated=$this->validated();
+        $validated['user_id']=auth()->id();
+    }
 }

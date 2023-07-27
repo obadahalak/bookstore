@@ -43,11 +43,11 @@ class UserRequest extends FormRequest
         return array_slice($generalRules,0,2);
        }
        if($this->routeIs('user.update')){
-           $generalRules['type']=['nullable',Rule::in('author','user')];
-        $generalRules['Author_type']=[Rule::RequiredIf(auth()->user()->tokenCan('Author'))];
-        $generalRules['email'][2]='unique:users,email,'.auth()->id();
-        $generalRules['password'][0]= 'sometimes'; // old password
-        $generalRules['password'][1]= 'current_password'; // old password
+      
+        $generalRules['type']=['nullable'];
+        $generalRules['email']=Rule::unique('users','email')->ignore(auth()->id());
+        $generalRules['password']='required_with:new_password'; // old password
+        // $generalRules['password'][1]= 'current_password'; // old password
         return $generalRules;
 
        }
@@ -79,9 +79,22 @@ class UserRequest extends FormRequest
 }
 
     
-    public function ValidatedData(){
+    public function validatedData(){
         $validated=$this->validated();
-        $validated['type']='user';
+    
+        if($this->routeIs('user.update')){
+        
+            if(request()->filled('new_password'))
+                $validated=  array_merge($validated,['password'=>bcrypt(request()->new_password)]);
+                if(request()->filled('type')){
+                   
+                    $validated=  array_merge($validated,['type'=> request()->type ]);
+                }
+        }
+        if(!$this->routeIs('user.update'))
+
+            $validated['type']='user';
+        
         return $validated;
     }
     

@@ -36,7 +36,7 @@ Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(f
     Route::post('/forgetPassword','resetPassword')->name('forgetPassword');
     Route::post('/change-password','update_password')->name('verifyCode');
   
-    Route::middleware('role:user')->group(function(){
+    Route::middleware('role:author,user')->group(function(){
         Route::get('/profile', 'profile');
 
         Route::post('/update-user', 'update')->name('update');
