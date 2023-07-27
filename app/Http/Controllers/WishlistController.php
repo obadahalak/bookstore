@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Book;
 use App\Http\Requests\BookRequest;
+use App\Http\Services\BookService;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\BookResource;
 
 class WishlistController extends Controller
 {
@@ -17,30 +20,10 @@ class WishlistController extends Controller
     }
 
     public function Wishlist(){
-        $wishlist=DB::table('likes')
-                  ->where('likes.user_id',auth()->user()->id)
-                  ->join('books as b','b.id','=','likes.book_id')
-                  ->join('categories as c','c.id','=','b.category_id')
-                  ->join('users as u','u.id','=','b.user_id');
-
-
-                 $data=   $wishlist->join('images', function($q) {
-                    $q->on('images.imageable_id', '=', 'b.id');
-                    $q->where('images.imageable_type', '=', 'App\Models\Book');
-                    $q->where('images.type','cover');
-                })
-           
-                   ->select(
-                    'b.id as id','b.name as name'
-                    ,'b.overview as overview'
-                    ,'b.rating as rating'
-                    ,'u.name as Author'
-                    ,'c.title as category'
-                    ,'images.file'
-                   
-                    )->paginate(10);
         
-       return $data;
+        $data=BookResource::collection(Book::with('Images')->whereIn('id',BookService::getUserWishlist())->paginate(10));
+              
+       return response()->paginate($data);
     }
 
 }

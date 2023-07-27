@@ -26,23 +26,20 @@ Route::get('/clear', function () {
 
 
 
-
-
-
 ////authentication endpoints ///
-Route::controller(AuthController::class)->prefix('auth')->group(function () {
+Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(function () {
 
 
-    Route::post('/register', 'accountRegister')->name('account');
-    Route::get('/login', 'authentection')->name('login');
+    Route::post('/sign-up', 'store')->name('register');
+    Route::post('/sign-in', 'login')->name('login');
    
-    Route::post('/forgetPassword','sendResetPasswordCode')->name('forgetPassword');
+    Route::post('/forgetPassword','resetPassword')->name('forgetPassword');
     Route::post('/sendCode','codeCheck')->name('verifyCode');
   
     Route::middleware('role:user')->group(function(){
         Route::get('/profile', 'profile');
 
-        Route::post('/update-user', 'update')->name('updateUser');
+        Route::post('/update-user', 'update')->name('update');
     });
     
 

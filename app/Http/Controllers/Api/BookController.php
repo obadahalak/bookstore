@@ -83,34 +83,34 @@ class bookController extends Controller
 
 
     public function foryou(){
+        $books=[];
        if(auth()->check()){
      
-        $categoryForYou=DB::table('likes')
+        $categories=DB::table('likes')
         
-        ->where('likes.user_id',auth('user')->id())
-        
-        ->join('books', 'books.id','=','likes.book_id')
-        
-        ->selectRaw('books.category_id, COUNT(likes.id) AS num_likes')
-        
-        ->groupBy('books.category_id')
-        
-        ->orderBy('num_likes','DESC')
-        
-        ->pluck('category_id')
-        
-        ->take(5);
-        
-      if(count($categoryForYou))
-     
-          return Book::whereIn('category_id',$categoryForYou)->paginate(10);
-       }
-     
-      $randomCategories=Category::inRandomOrder()->take(5)->get('id')->pluck('id');
-      return Book::whereIn('category_id',$randomCategories)->paginate(10);
+            ->where('likes.user_id',auth('user')->id())
+            
+            ->join('books', 'books.id','=','likes.book_id')
+            
+            ->selectRaw('books.category_id, COUNT(likes.id) AS num_likes')
+            
+            ->groupBy('books.category_id')
+            
+            ->orderBy('num_likes','DESC')
+            
+            ->pluck('category_id')
+            
+            ->take(5);
+            
+        }
+      if(!count($categories)){
+        $categories = Category::inRandomOrder()->take(5)->get('id')->pluck('id');
+    }
+        $books=Book::whereIn('category_id',$categories)->paginate(10);
+        return $books;
       
 
-    }
+}
 
     public function evaluate(BookRequest $request){
       

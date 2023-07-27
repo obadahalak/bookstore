@@ -20,25 +20,16 @@ class AuthController extends Controller
 
     use UploadImage;
 
-    public function accountRegister(UserRequest $request){
+    public function store(UserRequest $request){
       
-        // dd($request->all());
-        $account=User::create([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'password'=>$request->password,
-            'bio'=>$request->bio,
-            
-            'type'=>'user',
-            // 'role'=>'user',
-        ]);
+        $account=User::create($request->ValidatedData());
         $token= $account->createToken('user-Token')->accessToken;
         $account->assignRole('user');
-        return response()->json(['token' => $token,'ability'=>'user'],200);
+        return response()->data(['token'=>$token,'ability'=>'user']);
  
     }
  
-    public function authentection(UserRequest $Request)
+    public function login(UserRequest $Request)
     {
        
         $user = User::where('email', $Request->email)->first();
@@ -49,31 +40,34 @@ class AuthController extends Controller
             ]);
         }
         $token= $user->createToken('user-Token')->accessToken;
-        $user->assignRole('user');
-        return response()->json(['token' => $token,'ability'=>'user']);
+        return response()->data(['token'=>$token]);
+        
     }
   
    
-  public function sendResetPasswordCode(UserRequest $request){
+  public function resetPassword(UserRequest $request){
 
-    
-    
-     $batch = Bus::batch(
-        
-         new sendResetPasswordCode($request->email)
-        
-        )->then(function (Batch $batch) {
-        // Log::info('bb');
-    })->dispatch();
+     $user=User::where('email',$request->email)->first();
+
+    if($user){
+
+        $batch = Bus::batch(
+            
+            new sendResetPasswordCode($request->email)
+            
+            )->then(function (Batch $batch) {
+                // Log::info('bb');
+            })->dispatch();
+        }
      
-    return response()->json(['message'=>'If this email is already registered, an email will be sent to your mail to retrieve your password']);
+    return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
 
    
   } 
 
     public function codeCheck(UserRequest $request){
     
-    $user=User::firstWhere('rest_token', $request->token);   
+    $user=User::firstWhere('rest_token', $request->token)->first();
     
     $user->update([
         'password'=>$request->password,
@@ -87,7 +81,7 @@ class AuthController extends Controller
 
     public function profile(){
         return Cache::rememberForever(auth()->user()->email,function(){
-
+            
             return new UserResource(auth()->user());
         });
 

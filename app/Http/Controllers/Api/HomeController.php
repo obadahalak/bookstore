@@ -19,7 +19,6 @@ class HomeController extends Controller
     public function index()
     {
      
-        // return  AuthorResource::collection(User::Author()->with(['image'])->inRandomOrder()->take(5)->get());
       $homepage= Cache::remember('homepage',60,function(){
         return $homepage=[
             'NEW BOOKS'=>

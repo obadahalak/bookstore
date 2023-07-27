@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use App\Mail\RestPasswordMail;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
@@ -26,23 +26,24 @@ class sendResetPasswordCode implements ShouldQueue
      * @return void
      */
    
-    public $user;
-    public function __construct($user)
+    public $email;
+    public function __construct($email)
     {
-        $this->user = $user;
+        $this->email = $email;
       
     }
     private function generateCode($email){
+       
         $code=Str::random(20);
-        $users=User::where('rest_token',$code)->first();
-        while($users){
+        
+        while(User::where('rest_token',$code)->first()){
             $code=Str::random(20);
         }
         $user=User::where('email',$email)->first();
       
         $user->update([ 
             'rest_token'=>$code,
-            'reset_token_expiration'=>Carbon::now()->addMinutes(30),
+            'reset_token_expiration'=>Carbon::now()->addMinutes(15),
         ]);
         return $code;
     }
@@ -56,7 +57,8 @@ class sendResetPasswordCode implements ShouldQueue
      
     public function handle()
     {
-       $ToUser=$this->generateCode($this->user);
-        Mail::to($this->user)->send(new RestPasswordMail($ToUser));
+       $toUser=$this->generateCode($this->email);
+      
+        Mail::to($this->email)->send(new RestPasswordMail($toUser));
     }
 }

@@ -54,5 +54,13 @@ class BookService {
       
     }
     
-
+    public static  function getUserWishlist(){
+       
+       return  DB::table('likes')
+                    ->where('likes.user_id',auth()->user()->id)
+                    ->join('books as b','b.id','=','likes.book_id')
+                    ->select('b.id')
+                    ->pluck('b.id');
+        }
+    
 }

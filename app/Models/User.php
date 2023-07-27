@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Book;
+use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -38,6 +39,7 @@ class User extends Authenticatable
         'rest_token',
         'reset_token_expiration'
     ];
+  
 
     /**
      * The attributes that should be hidden for serialization.
@@ -58,6 +60,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    
     public function password(): Attribute
     {
         return new Attribute(
@@ -85,6 +88,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Book::class,'likes')->withTimestamps();
     }
 
+   
 
     public function evaluations(){
         return  $this->belongsToMany(Book::class,'evaluations')->withTimestamps();

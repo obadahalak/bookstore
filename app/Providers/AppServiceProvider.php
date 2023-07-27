@@ -23,8 +23,16 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot(){
-        Response::macro('paginate', function ($data) {
     
+
+        Response::macro('data', function ( $data=[],$status=200) {
+            return response()->json([
+                'data'=>$data,
+                'status'=>$status,                     
+            ]);
+        });
+
+        Response::macro('paginate', function ($data) {
     
         return Response::make([
             'data'=>$data->items(),
