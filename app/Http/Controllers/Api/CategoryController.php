@@ -16,9 +16,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryController extends Controller
 {
-    use CategoryActions;
     public function store(CategoryRequest $request){
-        return $this->cretae($request->all());
+        Category::cretae(['name'=>$request->name]);
+        return response()->data('category created successfully',201);
     }
     public function categories(){   
 
@@ -26,7 +26,7 @@ class CategoryController extends Controller
 
             return CategoryResource::collection(Category::inRandomOrder()->paginate(10)); 
         });
-        return $data;
+        return response()->data($data);
     } 
 
 }

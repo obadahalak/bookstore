@@ -25,7 +25,6 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name'=>'min:3',
-            'password'=>'min:3|nullable'
         ];
     }
 }
