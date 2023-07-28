@@ -3,10 +3,9 @@
 namespace App\Http\Services;
 
 use App\Models\Book;
-use setasign\Fpdi\Fpdi;
+use App\Models\Link;
 use App\Events\PublishedBook;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -61,6 +60,19 @@ class BookService {
                     ->join('books as b','b.id','=','likes.book_id')
                     ->select('b.id')
                     ->pluck('b.id');
+        }
+
+        public static function isAvilableBook($token){
+            $book=Link::whereToken($token)->whereActive(true)->first();
+            if($book)return $book->book_id;
+            abort(403,'link has been expired');
+        }
+
+        public static function inactivationLink($token){
+            Link::where('token',request()->token)->update([
+                'active'=>false,
+            ]);
+            return true;
         }
     
 }

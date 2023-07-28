@@ -1,6 +1,9 @@
 <?php
 
 
+use App\Models\Book;
+use Illuminate\Support\Str;
+use App\Models\Link;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\HomeController;
@@ -9,6 +12,8 @@ use  App\Http\Controllers\Api\bookController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\AuthController;
+
+
 
 
 
@@ -56,6 +61,7 @@ Route::controller(WishlistController::class)->middleware('role:user')->prefix('w
 });
 /// books endpoints ////   
 Route::controller(bookController::class)->prefix('books')->group(function(){
+    Route::get('/download','download');
     Route::get('/seeMore','getBooks');
     Route::get('/','index');
     Route::get('/{book:id}','show')->name('book.show');
@@ -65,6 +71,8 @@ Route::controller(bookController::class)->prefix('books')->group(function(){
     Route::get('bestRating','bestRating');
     Route::get('foryou','foryou');
     Route::post('evaluate','evaluate')->name('evaluateBook')->middleware('role:user');
+    Route::get('/create_download_link/{book:id}','createUrl');
+    
 });
 
 
@@ -82,7 +90,6 @@ Route::controller(AuthorController::class)->prefix('authors')->group(function(){
     Route::get('/', 'authors');
     Route::get('/find', 'author');
     Route::get('books','books');
-    // Route::get('/{user:id}','test');
 });
 
 /// categories endpoints ////

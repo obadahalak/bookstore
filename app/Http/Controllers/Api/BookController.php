@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Models\Book;
 use App\Models\Category;
 use App\Events\Evaluated;
+use App\Models\Link;
 use App\Http\Requests\BookRequest;
 use App\Http\Services\BookService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BookResource;
 use  App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Request;
-// use Illuminate\Support\Facades\Artisan
+use Illuminate\Support\Facades\Storage;
 class bookController extends Controller
 {
 
@@ -121,6 +120,28 @@ class bookController extends Controller
     
        return response()->json(['message'=>'Evaluation successfully'],201);
     
+    }
+
+    public function createUrl(Book $book){
+        
+        $token=generate_token();
+        
+       $data= Link::create([
+            'token'=>$token,
+            'book_id'=>$book->id,
+            'url'=>$token
+        ]);
+        return response()->data($data->url);
+    }
+
+    
+    public function download(){
+           $book=BookService::isAvilableBook(request()->token); 
+        if($book){
+            BookService::inactivationLink(request()->token);
+         return  Storage::disk('public')->download("/books/$book.pdf");
+        }
+ 
     }
 
 }
