@@ -39,7 +39,7 @@ Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(f
     Route::post('/sign-in', 'login')->name('login');
    
     Route::post('/forgetPassword','resetPassword')->name('forgetPassword');
-    Route::post('/change-password','update_password')->name('verifyCode');
+    Route::post('/change-password','updatePassword')->name('verifyCode');
   
     Route::middleware('role:author,user')->group(function(){
         Route::get('/profile', 'profile');
@@ -62,11 +62,11 @@ Route::controller(WishlistController::class)->middleware('role:user')->prefix('w
 /// books endpoints ////   
 Route::controller(bookController::class)->prefix('books')->group(function(){
     Route::get('/download','download');
+    Route::get('/filter','byCategoryId');
     Route::get('/seeMore','getBooks');
     Route::get('/','index');
     Route::get('/{book:id}','show')->name('book.show');
     Route::get('/{Author_id}','author_books');
-    Route::get('filter','bookByCategoryId')->name('bookByCategory');
     Route::post('create','store')->name('book.store')->middleware('role:author');
     Route::get('bestRating','bestRating');
     Route::get('foryou','foryou');

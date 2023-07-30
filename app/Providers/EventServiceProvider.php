@@ -7,11 +7,13 @@ use App\Events\Evaluated;
 use App\Models\Evaluation;
 use App\Events\EvaluateEvent;
 use App\Events\PublishedBook;
+use App\Events\StoreBookEvent;
 use App\Observers\UserObserver;
 use App\Listeners\EvaluateListener;
 use App\Observers\EvaluationObserver;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\CalculateBookRating;
+use App\Listeners\IncreaseUserBooksEvent;
 use App\Listeners\SendNotificationForBookIsPublished;
 use App\Models\Book;
 use App\Models\Category;
@@ -39,6 +41,10 @@ class EventServiceProvider extends ServiceProvider
         PublishedBook::class=>[
             SendNotificationForBookIsPublished::class
             ],
+        StoreBookEvent::class=>[
+            IncreaseUserBooksEvent::class,
+            
+        ]    
     ];
  
 

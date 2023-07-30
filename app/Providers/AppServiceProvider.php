@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
@@ -25,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(){
     
 
+        
+    // Model::preventLazyLoading();
+    
         Response::macro('data', function ( $data=[],$status=200) {
             return response()->json([
                 'data'=>$data,

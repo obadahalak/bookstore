@@ -21,7 +21,7 @@ class WishlistController extends Controller
 
     public function Wishlist(){
         
-        $data=BookResource::collection(Book::with('Images')->whereIn('id',BookService::getUserWishlist())->paginate(10));
+        $data=BookResource::collection(Book::with('images')->whereIn('id',BookService::getUserWishlist())->paginate(10));
               
        return response()->paginate($data);
     }

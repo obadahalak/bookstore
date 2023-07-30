@@ -3,22 +3,31 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Book;
+use App\Models\Link;
 use App\Models\Category;
 use App\Events\Evaluated;
-use App\Models\Link;
+use Illuminate\Http\Request;
+use App\Events\StoreBookEvent;
 use App\Http\Requests\BookRequest;
 use App\Http\Services\BookService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BookResource;
 use  App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+
 class bookController extends Controller
 {
 
 
     public function store(BookRequest $request, BookService $bookService){
             
-        $bookService->createBook($request);
+      $book=$bookService->createBook($request);
+        
+    // Cache::put($book->getCacheKey(), $book, 60);
+
+
+        StoreBookEvent::dispatch(auth()->user());
         
         return response()->data('Your book has been submitted to the admin successfully. Wait for it to be activated ',201);
     }
@@ -46,38 +55,35 @@ class bookController extends Controller
     public function getBooks(){
         
         $category=Category::whereId(request()->category_id)->first();
-        $Book=Book::where('category_id',request()->category_id)
+        $books=Book::where('category_id',request()->category_id)
         ->skip(request()->skip)->take(3)
         ->where('name','LIKE','%'.request()->name.'%')
         ->get();
-        if(  (request()->skip *=2) >=$category->books()->count()  )
-            
-               
-            return response()->json([
-                'data'=>BookResource::collection($Book),
-                'status'=>false,
-            ]); 
-        
-    
+       
+        $isMoreBooks=(request()->skip *=2) >=$category->books()->count();   
 
             return response()->json([
-                'data'=>BookResource::collection($Book),
-                'status'=>true,
-            ]);
-    
+                'data'=>BookResource::collection($books),
+                'status'=>$isMoreBooks ? true :false ,
+            ]); 
+
     }
     public function show(Book $book)
     {
-        return new  BookResource(Book::Active()->with(['Images'])->find($book->id));
+        return new  BookResource(Book::Active()->with(['images'])->find($book->id));
     }
-    public function bookByCategoryId(BookRequest $request)
-    {
-       
-        return BookResource::collection(Book::Active()->where('category_id',$request->category_id)->paginate(10));
+    public function byCategoryId(Request $request)
+    { 
+
+        $data=  Cache::rememberForever("books_by_category_$request->category_id",function() use($request){
+            return (Book::Active()->where('category_id',$request->category_id)->paginate(10));
+
+        });
+        return BookResource::collection($data);
     }
     public function bestRating()
     {
-        return BookResource::collection(Book::Active()->with(['coverImage', 'Images'])->orderBy('rating', 'desc')->paginate(4));
+        return BookResource::collection(Book::Active()->with(['coverImage', 'images'])->orderBy('rating', 'desc')->paginate(4));
     }
 
 
@@ -106,7 +112,7 @@ class bookController extends Controller
         $categories = Category::inRandomOrder()->take(5)->get('id')->pluck('id');
     }
         $books=Book::whereIn('category_id',$categories)->paginate(10);
-        return $books;
+        return response()->data($books);
       
 
 }

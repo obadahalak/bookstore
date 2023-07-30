@@ -11,6 +11,7 @@ use App\Jobs\sendResetPasswordCode;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use app\Http\Services\UserService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -52,28 +53,22 @@ class AuthController extends Controller
 
     if($user){
         
-        $batch = Bus::batch(
-            
-            new sendResetPasswordCode($request->email)
-            
-            )->then(function (Batch $batch) {
+         Bus::batch( new sendResetPasswordCode($request->email))
+         ->then(function (Batch $batch) {
               
-            })->dispatch();
+         })->dispatch();
             return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
         }
         
    
   } 
 
-    public function update_password(UserRequest $request){
+    public function updatePassword(UserRequest $request ,UserService $userService){
         
-    $user=User::firstWhere('rest_token', $request->token)->first();
-    
-        $user->update([
-            'password'=>$request->password,
-            'rest_token'=> null,
-            'reset_token_expiration' => null,
-        ]); 
+        $user=User::firstWhere('rest_token', $request->token)->first();
+       
+        $userService->changePassword($user, $request->passowrd);
+       
         return response()->json(['message' => 'Password updated successful']);
         
     }

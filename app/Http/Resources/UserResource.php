@@ -19,14 +19,13 @@ class UserResource extends JsonResource
             'name'=>$this->name,
             'email'=>$this->email,
             'bio'=>$this->bio,
-           
             'image'=>$this->getImage(),
         ];
-        if(auth()->user()->tokenCan('Author')){
+        if(auth()->user()->hasRole('author')){
               
             $data=array_merge($data,[
-                'Author_type'=>$this->type,
-                'count_books'=>$this->books,
+                'author_type'=>$this->type,
+                'count_books'=>$this->count_of_books,
             ]);
         }
         return $data;

@@ -16,7 +16,7 @@ class BookService {
   
     public function createBook($data){
     
-         DB::transaction(function() use ($data){
+    return      DB::transaction(function() use ($data){
          
             $book=Book::create([
                 'name'=>$data->name,
@@ -33,7 +33,7 @@ class BookService {
            
 
             $this->bookFile($book , $data['book_file']);
-          
+         return $book; 
         
     });
     }

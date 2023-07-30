@@ -25,7 +25,7 @@ class BookResource extends JsonResource
             'category' => $this->category->title,
             'count_pages'=>$this->page_count,
             'coverImage' => $this->coverImage->file,
-            'gallaryImage' => GallaryImagesResurce::collection($this->whenLoaded('Images')),
+            'gallaryImage' => GallaryImagesResurce::collection($this->whenLoaded('images')),
             'book'=>$this->bookFile->file,
             'is_like'=>$this->is_like(),
         ];

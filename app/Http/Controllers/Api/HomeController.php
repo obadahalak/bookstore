@@ -22,9 +22,9 @@ class HomeController extends Controller
       $homepage= Cache::remember('homepage',60,function(){
         return $homepage=[
             'NEW BOOKS'=>
-            BookResource::collection(book::with(['Images','coverImage'])->latest()->take(3)->get()),
+            BookResource::collection(book::with(['images','coverImage'])->latest()->take(3)->get()),
             'TOP RATING'=>
-            BookResource::collection(book::with(['Images','coverImage'])->orderby('rating')->take(3)->get()),
+            BookResource::collection(book::with(['images','coverImage'])->orderby('rating')->take(3)->get()),
       
           ];
 
