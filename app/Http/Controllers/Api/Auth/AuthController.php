@@ -41,9 +41,7 @@ class AuthController extends Controller
             ]);
         }
         $token= $user->createToken('user-Token')->accessToken;
-    //     return $user->getRoleNames();
-    // //   return   User::role('author')->get();
-        return response()->data(['token'=>$token]);
+        return response()->data(['token'=>$token,'ability'=>$user->getRoleNames()]);
         
     }
   
@@ -92,7 +90,7 @@ class AuthController extends Controller
         
         $updateOrCreate=$user->image ? 'update': 'create';
         $updateOrCreate == 'update'? $this->unlinkImage($user->image->filename,'UserProfileImages')  :true;
-        $uploadImage=$this->uploadSingleImage($requestImage,'UserProfileImages');
+        $uploadImage=$this->uploadImage($requestImage,'UserProfileImages');
              
         $user->image()->$updateOrCreate([
                 'file' =>$uploadImage['url'],
@@ -105,18 +103,16 @@ class AuthController extends Controller
     {
         $response = [];
         $user=auth()->user();
-        if( isset($request->type)){
+        if( isset($request->type))
             $user->assignRole('author');
 
-        }
-           
+    
             $user->update($request->validatedData());
             $response=['message'=>'information updated sucessfully.'];    
        
         if(isset($request->image)) 
           $this->updateUserImage($request->image, $user) ;
         return  response()->data($response);
-        
         
          
     }

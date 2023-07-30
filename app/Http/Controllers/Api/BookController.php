@@ -15,12 +15,11 @@ use Illuminate\Support\Facades\Storage;
 class bookController extends Controller
 {
 
-    
-    public function __construct(public  BookService $bookService){}
 
-    public function store(BookRequest $request){
-        return $request->validated_data();
-        $this->bookService->store($request->only("name","overview","category_id","book_gallery","book_cover","book_file"));
+    public function store(BookRequest $request, BookService $bookService){
+            
+        $bookService->createBook($request);
+        
         return response()->data('Your book has been submitted to the admin successfully. Wait for it to be activated ',201);
     }
 

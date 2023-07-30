@@ -8,6 +8,7 @@ use App\Models\Author;
 use App\Models\Category;
 use App\Models\Evaluation;
 use App\enum\NotificationMessage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -59,5 +60,6 @@ class Book extends Model
     public function is_like(){
         return $this->likes->contains('user_id',auth()->id());
     }
+    
 
 }

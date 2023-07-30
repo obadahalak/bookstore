@@ -12,38 +12,61 @@ use Illuminate\Support\Facades\Storage;
 class BookService {
 
     
-    public function store($data){
-       
-       
+   
+  
+    public function createBook($data){
+    
          DB::transaction(function() use ($data){
-
-          $book=auth()->user()->books()->create(collect($data)->only("name","overview","category_id")->toArray());
+         
+            $book=Book::create([
+                'name'=>$data->name,
+                'overview'=>$data->overview,
+                'category_id'=>$data->category_id,
+                'page_count'=>$data->page_count,
+                'user_id'=>auth()->id()                
+            ]);
         
-            foreach($data['book_gallery'] as $book_images){
-               
-                $book->Images()->create([
-                    'file'=>Storage::disk('public')->url($book_images['src']->store('bookGaller','public')),
-                    'filename'=>$book_images['src']->getClientOriginalName(),
-                    'type'=>'gallary'
-                ]); 
-            }
+            $this->book_gallery($book , $data['book_gallery']);
+
+        
+            $this->coverImage($book , $data['book_cover']);
            
-            $book->coverImage()->create([
-                'file'=>Storage::disk('public')->url($data['book_cover']->store('bookCover','public')),
-                'filename'=>$data['book_cover']->getClientOriginalName(),
-                'type'=>'cover'
-               
-                
-            ]);
-            
-           $book->bookFile()->create([
-                'file'=>Storage::disk('public')->url($data['book_file']->store('books','public')),
-                'filename'=>$data['book_file']->getClientOriginalName(),
-                'type'=>'file'
-            ]);
-      
+
+            $this->bookFile($book , $data['book_file']);
+          
         
     });
+    }
+
+    protected function book_gallery($book,$data){
+        foreach($data as $book_images){
+               
+            $book->Images()->create([
+                'file'=>Storage::disk('public')->url($book_images['src']->store('bookGaller','public')),
+                'filename'=>$book_images['src']->getClientOriginalName(),
+                'type'=>'gallary'
+            ]); 
+        }
+        return $book;
+    }
+    protected function coverImage($book, $data){
+        $book->coverImage()->create([
+            'file'=>Storage::disk('public')->url($data->store('bookCover','public')),
+            'filename'=>$data->getClientOriginalName(),
+            'type'=>'cover'
+           
+            
+        ]);
+        return $book;
+    }
+    protected function bookFile($book ,$data){
+        $book->bookFile()->create([
+            'file'=>Storage::disk('public')->url($data->store('books','public')),
+            'filename'=>$data->getClientOriginalName(),
+            'type'=>'file'
+        ]);
+        return $book;
+  
     }
 
     public function active(Book $book, $status){

@@ -18,9 +18,9 @@ trait UploadImage{
         $this->filename=Str::uuid() .'__.'.$mimType;
         
         
-        $checkImage=Image::where('filename',$this->filename)->get();
+       
         
-       while ($checkImage->count()) {
+       while (Image::where('filename',$this->filename)->first()) {
      
          $this->filename=Str::uuid() .'__.'.$mimType;
        }
@@ -28,15 +28,13 @@ trait UploadImage{
 
 
     }
-    public function disk(){
-        return $this->disk='public';
-    }
+    
     public function setFolder($folderName){
         return $this->folder=$folderName;
     }
 
 
-    public function uploadSingleImage($image,$folder){
+    public function uploadImage($image,$folder){
        
         $this->setFolder($folder);
          $fileName= $this->filename($image->extension());
