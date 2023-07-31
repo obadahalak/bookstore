@@ -38,15 +38,15 @@ Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(f
     Route::post('/sign-in', 'login')->name('login');
    
   
-    Route::controller(ProfileController::class)->prefix('profile')->middleware('role:author,user')->group(function(){
-        Route::get('/', 'index');
+    Route::controller(ProfileController::class)->prefix('profile')->group(function(){
+        Route::get('/', 'index')->middleware('role:author,user');
 
-        Route::post('/update-user', 'update')->name('update');
+        Route::post('/update-user', 'update')->name('update')->middleware('role:author,user');
 
         
     Route::controller(RestPasswordController::class)->group(function(){
 
-        Route::get('/forget-Password','index')->name('forgetPassword');
+        Route::get('/forget-password','index')->name('forgetPassword');
         Route::post('/change-password','update')->name('verifyCode');
     });
 
@@ -60,26 +60,27 @@ Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(f
 /// books endpoints ////   
 Route::controller(bookController::class)->prefix('books')->as('book.')->group(function(){
     
+    Route::get('/seeMore','getBooks');
+
     Route::get('/','index');
     
     Route::post('/','store')->name('store')->middleware('role:author');
     
     Route::get('/{book:id}','show')->name('show');
    
-    Route::get('/seeMore','getBooks');
     
     
+    Route::controller(CategoryBookController::class)->prefix('category')->group(function(){
+        Route::get('/all','index');
+    });
     
     Route::controller(WishListBooksController::class)->middleware('role:user')->prefix('wishlist')->group(function(){
         
-        Route::get('/', 'index');
+        Route::get('/get', 'index');
         Route::post('/', 'store')->name('wishlist');
                 
     });
 
-    Route::controller(CategoryBookController::class)->prefix('category')->group(function(){
-        Route::get('/','index');
-    });
     
     Route::controller(AuthorBookController::class)->prefix('author')->group(function(){
         Route::get('/','index');
@@ -116,7 +117,7 @@ Route::controller(AuthorController::class)->prefix('authors')->group(function(){
 });
 
 /// categories endpoints ////
-Route::controller(CategoryController::class)->prefix('categories')->group(function () {
-    Route::get('/', 'categories');  
-    Route::post('/create', 'store');    
-});
+// Route::controller(CategoryController::class)->prefix('categories')->group(function () {
+//     Route::get('/', 'categories');  
+//     Route::post('/', 'store')->middleware('role:author,user');    
+// });

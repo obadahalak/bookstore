@@ -23,8 +23,8 @@ class RestPasswordController extends Controller
             ->then(function (Batch $batch) {
                  
             })->dispatch();
-               return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
-           }
+        }
+        return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
            
       
      } 

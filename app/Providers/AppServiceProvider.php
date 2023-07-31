@@ -27,12 +27,13 @@ class AppServiceProvider extends ServiceProvider
     
 
         
-    // Model::preventLazyLoading();
+    Model::preventLazyLoading();
     
-        Response::macro('data', function ( $data=[],$status=200) {
+        Response::macro('data', function ( $data=[],$status=200,$message='') {
             return response()->json([
                 'data'=>$data,
-                'status'=>$status,                     
+                'status'=>$status,    
+                "message"=>$message,              
             ]);
         });
 

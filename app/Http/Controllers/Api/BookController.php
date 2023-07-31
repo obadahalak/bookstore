@@ -49,7 +49,9 @@ class bookController extends Controller
     public function getBooks(){
         
         $category=Category::whereId(request()->category_id)->first();
-        $books=Book::where('category_id',request()->category_id)
+        
+       
+        $books=Book::with(['category','user','coverImage','bookFile','likes'])->where('category_id',request()->category_id)
         ->skip(request()->skip)->take(3)
         ->where('name','LIKE','%'.request()->name.'%')
         ->get();

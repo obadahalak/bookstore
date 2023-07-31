@@ -16,13 +16,13 @@ class WishListBooksController extends Controller
     public function store(BookRequest $request ){
         $likeOrUnlike=$request->status ? 'syncWithoutDetaching' : 'detach';
          auth()->user()->likes()->$likeOrUnlike([$request->book_id]);
-         return response()->json(['message'=>'Successfully']);
+         return response()->data(message:'book added to your wishlist',status:201);
     }
 
     public function index(){
         
-        $data=BookResource::collection(Book::with('images')->whereIn('id',BookService::getUserWishlist())->paginate(10));
+        $books=BookResource::collection(Book::with(['user','category','coverImage','bookFile','likes'])->whereIn('id',BookService::getUserWishlist())->paginate(10));
               
-       return response()->paginate($data);
+       return response()->paginate($books);
     }
 }
