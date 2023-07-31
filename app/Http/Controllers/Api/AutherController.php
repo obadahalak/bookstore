@@ -16,7 +16,7 @@ class AuthorController extends Controller
     public function types(){
         return response()->data(User::Author()->distinct()->pluck('type')); 
     }
-    public function authors(){
+    public function index(){
         $authors=User::Author()->with(['image']);
           $authors->when(request('search'),function($q) use($authors){
              return $authors->where('name','LIKE','%'.request()->search.'%')->paginate(10);
@@ -25,7 +25,7 @@ class AuthorController extends Controller
         return response()->paginate(AuthorResource::collection($authors->paginate(10)));
     }
 
-    public function author(){
+    public function show(){
         $author=User::Author()->with(['image'])->find(request()->id);
         if($author)
             return AuthorResource::make($author);

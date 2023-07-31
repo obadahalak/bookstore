@@ -55,7 +55,7 @@ class BookRequest extends FormRequest
         
            
         
-        if($this->routeIs('wishlist')){
+        if($this->routeIs('book.wishlist')){
             
               return  [
                   'status'=>['required','boolean'],

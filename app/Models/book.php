@@ -33,7 +33,7 @@ class Book extends Model
     {
         return $this->morphOne(Image::class, 'imageable')->where('type','cover');
     }
-    public function Images()
+    public function images()
     {
         return $this->morphMany(Image::class, 'imageable')->where('type','gallary');
     }
@@ -62,4 +62,9 @@ class Book extends Model
     }
     
 
+
+    public function getCacheKey()
+{
+    return 'books_by_category_' . $this->category_id;
+}
 }
