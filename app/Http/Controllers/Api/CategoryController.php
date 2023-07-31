@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Tag;
 use App\Models\Category;
-use Illuminate\Http\Request;
-use App\traits\CategoryActions;
-use App\Http\Resources\TagResource;
-use Illuminate\Pagination\Paginator;
-use  App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryController extends Controller
 {

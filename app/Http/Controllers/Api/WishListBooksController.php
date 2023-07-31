@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Api;
 
 use App\Models\Book;
+use Illuminate\Http\Request;
 use App\Http\Requests\BookRequest;
 use App\Http\Services\BookService;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
 
-class WishlistController extends Controller
+class WishListBooksController extends Controller
 {
-
+    
     
     public function store(BookRequest $request ){
         $likeOrUnlike=$request->status ? 'syncWithoutDetaching' : 'detach';
@@ -19,11 +19,10 @@ class WishlistController extends Controller
          return response()->json(['message'=>'Successfully']);
     }
 
-    public function Wishlist(){
+    public function index(){
         
         $data=BookResource::collection(Book::with('images')->whereIn('id',BookService::getUserWishlist())->paginate(10));
               
        return response()->paginate($data);
     }
-
 }

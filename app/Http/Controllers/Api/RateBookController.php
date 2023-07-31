@@ -1,11 +1,12 @@
 <?php
+namespace App\Http\Controllers\Api;
 
-namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Events\Evaluated;
 use Illuminate\Http\Request;
 use App\Http\Requests\BookRequest;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
 
 class RateBookController extends Controller

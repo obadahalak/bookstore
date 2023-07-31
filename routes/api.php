@@ -1,22 +1,20 @@
 <?php
 
 
-use App\Models\Book;
-use App\Models\Link;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\RateBookController;
-use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Api\RateBookController;
 use  App\Http\Controllers\Api\bookController;
 use App\Http\Controllers\Api\AuthorController;
-use App\Http\Controllers\AuthorBookController;
+use App\Http\Controllers\Api\AuthorBookController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\CategoryBookController;
-use App\Http\Controllers\DownloadBookController;
+use App\Http\Controllers\Api\CategoryBookController;
+use App\Http\Controllers\Api\DownloadBookController;
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\WishListBooksController;
+use App\Http\Controllers\Api\Auth\ProfileController;
+use App\Http\Controllers\Api\Auth\RestPasswordController;
+use App\Http\Controllers\Api\WishListBooksController;
 
 ////configuration ///
 Route::get('/setup', function () {
@@ -39,13 +37,19 @@ Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(f
     Route::post('/sign-up', 'store')->name('register');
     Route::post('/sign-in', 'login')->name('login');
    
-    Route::post('/forgetPassword','resetPassword')->name('forgetPassword');
-    Route::post('/change-password','updatePassword')->name('verifyCode');
   
-    Route::middleware('role:author,user')->group(function(){
-        Route::get('/profile', 'profile');
+    Route::controller(ProfileController::class)->prefix('profile')->middleware('role:author,user')->group(function(){
+        Route::get('/', 'index');
 
         Route::post('/update-user', 'update')->name('update');
+
+        
+    Route::controller(RestPasswordController::class)->group(function(){
+
+        Route::get('/forget-Password','index')->name('forgetPassword');
+        Route::post('/change-password','update')->name('verifyCode');
+    });
+
     });
     
 

@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Models\book;
-use App\Models\User;
-use App\Models\Author;
+
 use App\Http\Resources\BookResource;
-use App\Http\Resources\HomeResource;
 use  App\Http\Controllers\Controller;
-use App\Http\Resources\AuthorResource;
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller

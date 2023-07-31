@@ -47,70 +47,9 @@ class AuthController extends Controller
     }
   
    
-  public function resetPassword(UserRequest $request){
+ 
 
-     $user=User::where('email',$request->email)->first();
-
-    if($user){
-        
-         Bus::batch( new sendResetPasswordCode($request->email))
-         ->then(function (Batch $batch) {
-              
-         })->dispatch();
-            return response()->json(['message'=>'If this email is already registered, a code will be sent to your email to reset your password']);
-        }
-        
    
-  } 
-
-    public function updatePassword(UserRequest $request ,UserService $userService){
-        
-        $user=User::firstWhere('rest_token', $request->token)->first();
-       
-        $userService->changePassword($user, $request->passowrd);
-       
-        return response()->json(['message' => 'Password updated successful']);
-        
-    }
-
-    public function profile(){
-        return Cache::rememberForever(auth()->user()->email,function(){
-            
-            return new UserResource(auth()->user());
-        });
-
-}
-
-    public function updateUserImage($requestImage,$user){
-        
-        $updateOrCreate=$user->image ? 'update': 'create';
-        $updateOrCreate == 'update'? $this->unlinkImage($user->image->filename,'UserProfileImages')  :true;
-        $uploadImage=$this->uploadImage($requestImage,'UserProfileImages');
-             
-        $user->image()->$updateOrCreate([
-                'file' =>$uploadImage['url'],
-                'filename'=>$uploadImage['filename'],
-            ]);
-          return response()->json(['message'=>''.$updateOrCreate.' profile updated successfully']);  
-    }
-
-    public function update(UserRequest $request)
-    {
-        $response = [];
-        $user=auth()->user();
-        if( isset($request->type))
-            $user->assignRole('author');
-
-    
-            $user->update($request->validatedData());
-            $response=['message'=>'information updated sucessfully.'];    
-       
-        if(isset($request->image)) 
-          $this->updateUserImage($request->image, $user) ;
-        return  response()->data($response);
-        
-         
-    }
     
 }
     

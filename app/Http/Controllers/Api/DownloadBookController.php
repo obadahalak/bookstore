@@ -1,11 +1,12 @@
 <?php
+namespace App\Http\Controllers\Api;
 
-namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Link;
 use Illuminate\Http\Request;
 use App\Http\Services\BookService;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class DownloadBookController extends Controller
