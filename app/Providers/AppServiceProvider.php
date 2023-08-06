@@ -53,21 +53,21 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', $args) {
-            
-            return Cache::remember(request()->fullUrl(), 60 * 2, function () use ($data, $status_code, $message,$args) {
-                return response()->json([
-                    'data' => $data,
-                        ...$args,
-                    'status_code' => $status_code,
-                    "message" => $message,
-                ]);
-            });
+        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', null|array $args = null) {
+            $array = [
+                'data' => $data,
+                'status_code' => $status_code,
+                "message" => $message,
+            ];
+            $array = ($args == null) ? $array : array_merge($array, $args);
 
+            return Cache::remember(request()->fullUrl(), 60 * 60 * 2, function () use ($array) {
+                return response()->json($array);
+            });
         });
 
 
-        
+
         Response::macro('cacheResponsePaginate', function ($data = [], $status = 200, $message = '') {
             return Cache::remember(request()->fullUrl(), 60 * 2, function () use ($data, $status, $message) {
                 return Response::make([
@@ -78,10 +78,9 @@ class AppServiceProvider extends ServiceProvider
                         'per_page' => $data->perPage(),
                         'total' => $data->total(),
                     ]
-                   
+
                 ]);
             });
-
         });
     }
 }
