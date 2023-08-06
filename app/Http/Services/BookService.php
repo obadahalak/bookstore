@@ -61,8 +61,8 @@ class BookService {
     }
     protected function bookFile($book ,$data){
         $book->bookFile()->create([
-            'file'=>Storage::disk('public')->url($data->store('books','public')),
-            'filename'=>$data->getClientOriginalName(),
+            'file'=>Storage::disk('public')->url($data->storeAs('books',"$book->id.pdf" ,'public')),
+            'filename'=>"$book->id.pdf",
             'type'=>'file'
         ]);
         return $book;

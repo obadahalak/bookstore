@@ -16,11 +16,9 @@ class CategoryController extends Controller
     }
     public function categories(){   
 
-       $data=  Cache::rememberForever('categories',function(){
-
-            return CategoryResource::collection(Category::inRandomOrder()->paginate(10)); 
-        });
-        return response()->data($data);
+   
+        return response()->cacheResponsePaginate(CategoryResource::collection(Category::paginate(10))); 
+ 
     } 
 
 }

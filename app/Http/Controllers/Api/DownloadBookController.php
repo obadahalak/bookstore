@@ -15,12 +15,12 @@ class DownloadBookController extends Controller
         
         $token=generate_token();
         
-       $data= Link::create([
+       $link= Link::create([
             'token'=>$token,
             'book_id'=>$book->id,
             'url'=>$token
         ]);
-        return response()->data($data->url);
+        return response()->data($link->url);
     }
 
     
