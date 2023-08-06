@@ -116,8 +116,8 @@ Route::controller(AuthorController::class)->prefix('authors')->group(function(){
 
 });
 
-/// categories endpoints ////
-// Route::controller(CategoryController::class)->prefix('categories')->group(function () {
-//     Route::get('/', 'categories');  
-//     Route::post('/', 'store')->middleware('role:author,user');    
-// });
+//  categories endpoints ////
+Route::controller(CategoryController::class)->prefix('categories')->group(function () {
+    Route::get('/', 'categories');  
+    Route::post('/', 'store')->middleware('role:author,user');    
+});
