@@ -17,6 +17,6 @@ class BooksSchedulingController extends Controller
     public function index()
     {
 
-        return BooksSchedulingResourse::collection(BooksScheduling::where('user_id', auth()->id())->get());
+        return  (BooksSchedulingResourse::collection(BooksScheduling::with(['user','book'])->paginate(10)));
     }
 }

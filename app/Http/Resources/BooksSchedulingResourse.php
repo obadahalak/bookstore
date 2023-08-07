@@ -16,7 +16,6 @@ class BooksSchedulingResourse extends JsonResource
     public function toArray($request): array
     {
         $todayName = Carbon::today()->dayName;
-
         $status_of_day = isset($this->days->$todayName) ? $this->days->$todayName->status  : 'no task today';
 
 
@@ -27,7 +26,7 @@ class BooksSchedulingResourse extends JsonResource
             'started_task' => $this->created_at->longRelativeToNowDiffForHumans(),
             'duration' => $this->chechDurationTaks($this->created_at->addDays($this->duration)),
             'general_duration' => $this->duration . ' ' . 'days',
-            $todayName => $status_of_day,
+            'today' => $status_of_day,
         ];
     }
 }
