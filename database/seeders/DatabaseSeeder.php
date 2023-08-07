@@ -10,7 +10,9 @@ use App\Models\Admin;
 use Spatie\Permission\Models\Role;
 use App\Models\Image;
 use App\Models\Author;
+use App\Models\BooksScheduling;
 use App\Models\Category;
+use Database\Factories\BookSchedulingSeederFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,57 +25,58 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $types=[
-            'Novelist',
-            'Poet',
-            'Songwriter',
-            'Blogger',
-            'Business writer',
-            'Ghostwriter'
-        ];
-         Role::create(['name' => 'author']);
+        BooksScheduling::factory()->create();
+        // $types=[
+        //     'Novelist',
+        //     'Poet',
+        //     'Songwriter',
+        //     'Blogger',
+        //     'Business writer',
+        //     'Ghostwriter'
+        // ];
+        //  Role::create(['name' => 'author']);
 
-         Role::create(['name'=>'user']);
+        //  Role::create(['name'=>'user']);
      
 
-        Admin::create([
-            'email'=>'admin@example.com',
-            'password'=>Hash::make('password'),
-        ]);
+        // Admin::create([
+        //     'email'=>'admin@example.com',
+        //     'password'=>Hash::make('password'),
+        // ]);
 
-        User::factory(3)
-        ->has(
-            Image::factory()
-                ->count(1)
-                ->state(function (array $attributes, User $Category) {
-                    return ['type' => null];
-                })
-        )->create()->each(function($user) {
-            $user->assignRole('user');
-        });
+        // User::factory(3)
+        // ->has(
+        //     Image::factory()
+        //         ->count(1)
+        //         ->state(function (array $attributes, User $Category) {
+        //             return ['type' => null];
+        //         })
+        // )->create()->each(function($user) {
+        //     $user->assignRole('user');
+        // });
         
-        User::factory(20)
-        ->has(
-            Image::factory()
-                ->count(1)
+        // User::factory(20)
+        // ->has(
+        //     Image::factory()
+        //         ->count(1)
                
-        )->create()->each(function($user) use($types) {
-            $user->assignRole('author');
-            // $user->type='dd';
-        });
+        // )->create()->each(function($user) use($types) {
+        //     $user->assignRole('author');
+        //     // $user->type='dd';
+        // });
 
-        Category::factory(8)->create();
+        // Category::factory(8)->create();
 
 
-            $book=Book::factory()->count(50)->hasImages(4,['type'=>'gallary'])
+        //     $book=Book::factory()->count(50)->hasImages(4,['type'=>'gallary'])
 
-           ->hascoverImage(1,['type'=>'cover'])
-           ->hasbookFile(1,[
-            'type'=>'file',
-            'file'=>'https://via.placeholder.com/600x600.pdf'
-           ]);
+        //    ->hascoverImage(1,['type'=>'cover'])
+        //    ->hasbookFile(1,[
+        //     'type'=>'file',
+        //     'file'=>'https://via.placeholder.com/600x600.pdf'
+        //    ]);
 
-           $book->create();
+        //    $book->create();
         
     }
 }

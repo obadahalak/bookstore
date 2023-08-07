@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', null|array $args = null) {
+        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', null|array $args = null,$ttl=60 * 60 * 2) {
             $array = [
                 'data' => $data,
                 'status_code' => $status_code,
@@ -61,15 +61,15 @@ class AppServiceProvider extends ServiceProvider
             ];
             $array = ($args == null) ? $array : array_merge($array, $args);
 
-            return Cache::remember(request()->fullUrl(), 60 * 60 * 2, function () use ($array) {
+            return Cache::remember(request()->fullUrl(), $ttl, function () use ($array) {
                 return response()->json($array);
             });
         });
 
 
 
-        Response::macro('cacheResponsePaginate', function ($data = [], $status = 200, $message = '') {
-            return Cache::remember(request()->fullUrl(), 60 * 2, function () use ($data, $status, $message) {
+        Response::macro('cacheResponsePaginate', function ($data = [], $status = 200, $message = '',$ttl=60 *60 * 2) {
+            return Cache::remember(request()->fullUrl(), $ttl, function () use ($data, $status, $message) {
                 return Response::make([
                     'data' => $data->items(),
                     'meta' => [
