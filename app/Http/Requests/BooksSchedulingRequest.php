@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Book;
+use App\Rules\DayRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BooksSchedulingRequest extends FormRequest
@@ -22,7 +24,19 @@ class BooksSchedulingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'days' => ['array', 'required'],
+            'days.*'=>['required',new DayRule()],
+            'status' => 'boolean',
+            'pages_per_day' => ['required', 'numeric', 'min:1'],
+            'book_id' => ['required', 'exists:books,id']
         ];
+    }
+    public function validatedData(){
+        $validated=$this->validated(); 
+        $book_page=Book::find(request()->book_id)->page_count;
+        $validated['duration']=$book_page / request()->pages_per_day;
+        $validated['user_id']=auth()->id();
+        // dd($validated);
+        return $validated;
     }
 }

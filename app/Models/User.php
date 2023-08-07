@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Book;
+use App\Models\BooksScheduling;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\Log;
@@ -92,6 +93,10 @@ class User extends Authenticatable
 
     public function evaluations(){
         return  $this->belongsToMany(Book::class,'evaluations')->withTimestamps();
+    }
+
+    public function booksSchedulings(){
+        return $this->hasMany(BooksScheduling::class);
     }
     public function scopeAuthor($q){
         return $q->role('author');
