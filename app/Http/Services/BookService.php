@@ -85,7 +85,7 @@ class BookService {
                     ->pluck('b.id');
         }
 
-        public static function isAvilableBook($token){
+        public static function isAvilableLink($token){
             $book=Link::whereToken($token)->whereActive(true)->first();
             if($book)return $book->book_id;
             abort(403,'link has been expired');
