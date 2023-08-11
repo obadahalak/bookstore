@@ -17,6 +17,23 @@ class BooksSchedulingController extends Controller
     public function index()
     {
 
-        return  (BooksSchedulingResourse::collection(BooksScheduling::with(['user','book'])->paginate(10)));
+        return  BooksSchedulingResourse::collection(BooksScheduling::with(['user', 'book'])->paginate(10));
+    }
+
+    public function staticses()
+    {
+        $pages =     BooksScheduling::get()->flatMap(function ($value) {
+            $readed_pages = array();
+
+            foreach ($value->days as $days) {
+                if ($days->status === true) {
+                    array_push($readed_pages, $value->pages_per_day);
+                }
+            }
+            return  $readed_pages;
+        })->toArray();
+        $completed = array_sum($pages);
+        
+        return response()->data(['readed_pages' => $completed]);
     }
 }
