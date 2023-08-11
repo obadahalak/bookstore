@@ -7,7 +7,9 @@ use App\Events\Evaluated;
 use App\Models\Evaluation;
 use App\Events\EvaluateEvent;
 use App\Events\PublishedBook;
+use App\Events\TrackingUserActivity;
 use App\Events\StoreBookEvent;
+use App\Listeners\AddBookToUserActivityListener;
 use App\Observers\UserObserver;
 use App\Listeners\EvaluateListener;
 use App\Observers\EvaluationObserver;
@@ -44,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         StoreBookEvent::class=>[
             IncreaseUserBooksEvent::class,
             
+        ], 
+        TrackingUserActivity::class=>[
+           AddBookToUserActivityListener::class        
         ]    
     ];
  
