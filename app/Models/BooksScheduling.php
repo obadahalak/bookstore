@@ -45,4 +45,7 @@ class BooksScheduling extends Model
 
         return $now > $timeDuration->format('m-d') ?  'finished' : $timeDuration->longRelativeToOtherDiffForHumans();
     }
+    public function completedScope($q){
+        $q->where('status',true);
+    }
 }
