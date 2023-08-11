@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\RateBookController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\AuthorBookController;
+use App\Http\Controllers\Api\ForYouBookController;
 use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\CategoryBookController;
 use App\Http\Controllers\Api\DownloadBookController;
@@ -19,7 +20,7 @@ use App\Http\Controllers\Api\Auth\RestPasswordController;
 
 ////configuration ///
 Route::get('/setup', function () {
-
+    
     Artisan::call('migrate:fresh --seed');
 });
 
@@ -79,8 +80,9 @@ Route::controller(bookController::class)->prefix('books')->as('book.')->group(fu
     });
 
 
-    Route::controller(BooksSchedulingController::class)->middleware('role:user')->prefix('books_schedulings')->group(function () {
+    Route::controller(BooksSchedulingController::class)->prefix('books_schedulings')->group(function () {
 
+        Route::get('/staticses','staticses');
         Route::get('/get', 'index');
         Route::post('/', 'store');
     });
@@ -95,13 +97,14 @@ Route::controller(bookController::class)->prefix('books')->as('book.')->group(fu
         Route::post('/', 'store')->name('evaluateBook')->middleware('role:user');
     });
 
-    Route::controller(DownloadBookController::class)->prefix('download')->group(function () {
-        Route::get('/', 'index');
-        Route::post('/{book:id}', 'store');
-    });
+   
 
-    Route::get('/foryou', ForYouBookController::class);
 });
+Route::controller(DownloadBookController::class)->prefix('download')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/{book:id}', 'store');
+});
+Route::get('/foryou', ForYouBookController::class);
 
 
 
