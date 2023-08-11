@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Book;
+use App\Events\TrackingUserActivity;
 use App\Models\Category;
 use App\Events\StoreBookEvent;
 use App\Http\Requests\BookRequest;
@@ -67,7 +68,7 @@ class bookController extends Controller
        ;
     }
     public function show(Book $book)
-    {
+    {   event( new TrackingUserActivity($book->id));
         return response()->cacheResponse(new BookResource(Book::Active()->with(['images'])->find($book->id)));
     }
 
