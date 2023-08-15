@@ -81,6 +81,9 @@ class User extends Authenticatable
     public function scopeAuthor($q){
         return $q->role('author');
     }
+    public function userActivities(){
+        return $this->belongsToMany(Book::class,'user_activities');
+    }
 
     
 }
