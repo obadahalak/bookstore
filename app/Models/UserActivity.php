@@ -17,7 +17,7 @@ class UserActivity extends Model
     protected static function booted(): void
     {
         static::addGlobalScope('userActivity', function (Builder $builder) {
-            $builder->where('user_id', auth()->id());
+            $builder->where('user_id', auth()->id())->orderBy('count_of_visits', 'desc');
         });
     }
 
@@ -25,10 +25,9 @@ class UserActivity extends Model
     {
         return $this->belongsTo(Book::class);
     }
-    
+
     public static function getBooksCategories()
     {
-        $categories = self::with(['book.category'])->get()->pluck('book.category.id')->toArray();
-        return ($categories);
+        return self::with(['book:id,category_id' => ['category:id']])->get()->pluck('book.category.id')->unique()->toArray();
     }
 }
