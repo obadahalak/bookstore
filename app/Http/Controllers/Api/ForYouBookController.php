@@ -20,7 +20,6 @@ class ForYouBookController extends Controller
     public function __invoke()
     {
 
-
         $books = [];
         if (auth()->check()) {
 
@@ -32,15 +31,18 @@ class ForYouBookController extends Controller
         }
 
         $categories = $this->sortingIds($categories);
-       
+
         $books = Category::whereIn('id', $categories)
-                ->with(['books' => function ($q) {
-        
-                $q->with(['user', 'category', 'coverImage', 'bookFile', 'likes'])
-        
+           
+            ->with(['books' => function ($q) {
+            
+                $q->whereNotIn('books.id',auth()->user()->withlistBooksid())
+            
+                ->with(['user', 'category', 'coverImage', 'bookFile', 'likes'])
+            
                 ->latest()->limit(3);
-        
-                }])->get()->pluck('books');
+            
+            }])->get()->pluck('books');
 
         return  BookResource::collection($books->flatMap(function ($book) {
             return $book;
