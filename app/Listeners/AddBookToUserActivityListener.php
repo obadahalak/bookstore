@@ -21,9 +21,8 @@ class AddBookToUserActivityListener
      */
     public function handle(object $event): void
     {
-        UserActivity::create([
-            'user_id'=>auth()->id(),
-            'book_id'=>$event->book
-        ]);
+        $book = auth()->user()->userActivities();
+        $book = $book->where('book_id', $event->book);
+        $book->exists() ?  $book->increment('count_of_visits')  : $book->attach($event->book);
     }
 }
