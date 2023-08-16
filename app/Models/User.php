@@ -84,6 +84,9 @@ class User extends Authenticatable
     public function userActivities(){
         return $this->belongsToMany(Book::class,'user_activities');
     }
+    public function withlistBooksid(){
+        return $this->likes()->get()->pluck('id');
+    }
 
     
 }
