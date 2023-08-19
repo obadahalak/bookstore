@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 
-use App\Models\book;
+use App\Models\Book;
 
 use App\Http\Resources\BookResource;
 use  App\Http\Controllers\Controller;
@@ -13,21 +13,19 @@ use Illuminate\Support\Facades\Cache;
 class HomeController extends Controller
 {
 
-    public function index()
-    {
-     
-      $homepage= Cache::remember('homepage',60,function(){
-        return $homepage=[
-            'NEW BOOKS'=>
-            BookResource::collection(book::with(['images','coverImage'])->latest()->take(3)->get()),
-            'TOP RATING'=>
-            BookResource::collection(book::with(['images','coverImage'])->orderby('rating')->take(3)->get()),
-      
-          ];
+  public function index()
+  {
+    $books = Book::with(['category', 'user', 'coverImage', 'bookFile', 'likes']);
 
-        });
-        return response()->json($homepage);
-    }
-   
+    return response()->data(
 
+      [
+        'NEW BOOKS' =>
+        BookResource::collection($books->latest()->take(4)->get()),
+        'TOP RATING' =>
+        BookResource::collection($books->orderby('rating')->take(4)->get()),
+      ]
+
+    );
+  }
 }
