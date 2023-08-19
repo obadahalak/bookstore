@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Validation\ValidationException;
 use Throwable;
-use function PHPUnit\Framework\matches;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -51,21 +51,24 @@ class Handler extends ExceptionHandler
             //
         });
     }
-    // public function render($request, Throwable $e)
-    // {
-      
-    //     if($e instanceof ModelNotFoundException){
+    public function render($request, Throwable $e)
+    {
 
-    //         $model=match($e->getModel()){
-    //             'App\\Models\\User' =>'User',
-    //             default=>'record'
-    //         };
-    //         return response()->json(['error'=>"$model not found"]);
-    //     }
-    //     if($e instanceof NotFoundHttpException){
-    //         $message=$e->getMessage();
-    //         return response()->json(['error'=>"$message "]);
-    //     }
-    //     parent::render($request,$e);
-    // }
+        if ($e instanceof ModelNotFoundException) {
+            $model = Str::afterLast($e->getModel(), "\\");
+
+            return response()->json(['error' => "$model not found"], 422);
+        }
+        if ($e instanceof NotFoundHttpException) {
+            $message = $e->getMessage();
+            return response()->json(['error' => "$message "]);
+        }
+        if ($e instanceof ValidationException) {
+
+            return response()->json(['message' => $e->getMessage(), 'errors' =>  $e->errors()], 422);
+        }
+
+        // return $e->getMessage();
+        parent::render($request, $e);
+    }
 }
