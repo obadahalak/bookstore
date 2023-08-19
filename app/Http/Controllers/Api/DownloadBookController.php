@@ -29,12 +29,13 @@ class DownloadBookController extends Controller
 
     public function index()
     {
-
-        $book = BookService::isAvilableLink(request()->token);
-        if ($book) {
-            event(new TrackingUserActivity($book));
-            BookService::inactivationLink(request()->token);
-            return  Storage::disk('public')->download("/books/$book.pdf");
-        }
+        $bookLink = Link::whereToken(request()->token)->first();
+       
+        event(new TrackingUserActivity($bookLink->book_id));
+        if (Storage::disk('public')->exists("/books/$bookLink->book_id.pdf")) 
+            return  Storage::disk('public')->download("/books/$bookLink->book_id.pdf");
+        
+        // BookService::inactivationLink(request()->token); 
+        // }
     }
 }
