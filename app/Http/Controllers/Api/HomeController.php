@@ -17,7 +17,7 @@ class HomeController extends Controller
   {
     $books = Book::with(['category', 'user', 'coverImage', 'bookFile', 'likes']);
 
-    return response()->data(
+    return response()->cacheResponse(
 
       [
         'NEW BOOKS' =>
