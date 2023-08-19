@@ -22,34 +22,25 @@ class AuthController extends Controller
 
     use UploadImage;
 
-    public function store(UserRequest $request){
-      
-        $account=User::create($request->validatedData());
-        $token= $account->createToken('user-Token')->accessToken;
+    public function store(UserRequest $request)
+    {
+
+        $account = User::create($request->validatedData());
+        $token = $account->createToken('user-Token')->accessToken;
         $account->assignRole('user');
-        return response()->data(['token'=>$token,'ability'=>'user']);
- 
+        return response()->data(['token' => $token, 'ability' => 'user']);
     }
- 
+
     public function login(UserRequest $Request)
     {
-       
+     
         $user = User::where('email', $Request->email)->first();
-        if (!$user || ! Hash::check($Request->password, $user->password)) {
-            return throw ValidationException::withMessages([
+        if (!$user || !Hash::check($Request->password, $user->password)) {
+            return response()->data([
                 'email' => ['Email or password not correct'],
-           
             ]);
         }
-        $token= $user->createToken('user-Token')->accessToken;
-        return response()->data(['token'=>$token,'ability'=>$user->getRoleNames()]);
-        
+        $token = $user->createToken('user-Token')->accessToken;
+        return response()->data(['token' => $token, 'ability' => $user->getRoleNames()]);
     }
-  
-   
- 
-
-   
-    
 }
-    
