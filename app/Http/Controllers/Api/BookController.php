@@ -14,12 +14,13 @@ use  App\Http\Controllers\Controller;
 
 class bookController extends Controller
 {
+    public function __construct(private BookService $bookService){}
 
 
-    public function store(BookRequest $request, BookService $bookService)
+    public function store(BookRequest $request)
     {
 
-        $book = $bookService->createBook($request);
+        $book = $this->bookService->createBook($request);
 
         // Cache::put($book->getCacheKey(), $book, 60);
 
@@ -68,8 +69,14 @@ class bookController extends Controller
        ;
     }
     public function show(Book $book)
-    {   event( new TrackingUserActivity($book->id));
-        return response()->cacheResponse(new BookResource(Book::Active()->with(['images'])->find($book->id)));
+    { 
+         event( new TrackingUserActivity($book->id));
+
+         $book=Book::Active()->with(['images'])->find($book->id);
+         
+         $book['similarBooks']=$this->bookService->similarBooks($book->category_id);
+             
+        return response()->data(new BookResource($book));
     }
 
     public function bestRating()
