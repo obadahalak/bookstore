@@ -24,7 +24,7 @@ class BooksSchedulingResourse extends JsonResource
             'book_name' => $this->book->name,
             'pages_must_be_read' => $this->pages_per_day,
             'started_task' => $this->created_at->longRelativeToNowDiffForHumans(),
-            'duration' => $this->chechDurationTaks($this->created_at->addDays($this->duration)),
+            'duration' => $this->checkDurationTaks($this->created_at->addDays($this->duration)),
             'general_duration' => $this->duration . ' ' . 'days',
             'today' => $status_of_day,
         ];
