@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Link;
 use App\Events\PublishedBook;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\BookResource;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -85,17 +86,11 @@ class BookService {
                     ->pluck('b.id');
         }
 
-        public static function isAvilableLink($token){
-            $book=Link::whereToken($token)->whereActive(true)->first();
-            if($book)return $book->book_id;
-            abort(403,'link has been expired');
-        }
 
-        public static function inactivationLink($token){
-            Link::where('token',request()->token)->update([
-                'active'=>false,
-            ]);
-            return true;
-        }
+
     
+
+        public function similarBooks($categoryId){
+           return (Book::with('coverImage:imageable_type,imageable_id,file')->where('category_id',$categoryId)->inRandomOrder()->take(5)->get());
+        }
 }
