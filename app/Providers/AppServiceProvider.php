@@ -31,9 +31,9 @@ class AppServiceProvider extends ServiceProvider
 
         Model::preventLazyLoading();
 
-        Response::macro('data', function ($data = [], $status_code = 200, $message = '') {
+        Response::macro('data', function ($key = 'data', $data = [], $status_code=200, $message = '') {
             return response()->json([
-                'data' => $data,
+                $key => $data,
                 'status_code' => $status_code,
                 "message" => $message,
             ]);
@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', null|array $args = null,$ttl=60 * 60 * 2) {
+        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', null|array $args = null, $ttl = 60 * 60 * 2) {
             $array = [
                 'data' => $data,
                 'status_code' => $status_code,
@@ -68,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-        Response::macro('cacheResponsePaginate', function ($data = [], $status = 200, $message = '',$ttl=60 *60 * 2) {
+        Response::macro('cacheResponsePaginate', function ($data = [], $status = 200, $message = '', $ttl = 60 * 60 * 2) {
             return Cache::remember(request()->fullUrl(), $ttl, function () use ($data, $status, $message) {
                 return Response::make([
                     'data' => $data->items(),
