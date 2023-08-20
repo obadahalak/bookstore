@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -51,24 +55,88 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
     public function render($request, Throwable $e)
     {
 
         if ($e instanceof ModelNotFoundException) {
-            $model = Str::afterLast($e->getModel(), "\\");
-
-            return response()->json(['error' => "$model not found"], 422);
+            return $this->modelNotFoundResponse($e);
         }
         if ($e instanceof NotFoundHttpException) {
-            $message = $e->getMessage();
-            return response()->json(['error' => "$message "]);
+            return $this->notFoundHttpResonse($e);
+        }
+        if ($e instanceof AuthorizationException) {
+            return $this->authorizationResonse($e);
+        }
+        if ($e instanceof AuthenticationException) {
+            return $this->authenticationResonse($e);
         }
         if ($e instanceof ValidationException) {
 
-            return response()->json(['message' => $e->getMessage(), 'errors' =>  $e->errors()], 422);
+            return $this->validationResponse($e);
+        } else {
+            return response()->data(
+                key: 'error',
+                message: 'Unexpected exception, try later',
+                status_code: 500
+            );
         }
 
-        // return $e->getMessage();
+
         parent::render($request, $e);
+    }
+
+    private function  modelNotFoundResponse(ModelNotFoundException $exception)
+    {
+        $modelName = strtolower(class_basename($exception->getModel()));
+        return response()->data(
+            key: 'error',
+            message: "$modelName not found",
+            status_code: 404
+        );
+    }
+    private function validationResponse(ValidationException $e)
+    {
+
+        return response()->data(
+            key: 'error',
+            data: ['message' => $e->getMessage(), 'errors' =>  $e->errors()],
+            status_code: 422
+        );
+    }
+    public function methodHttpResponse(MethodNotAllowedHttpException $e)
+    {
+        return response()->data(
+            key: 'error',
+            message: ['error' => "the specified methodfor the request is invalid"],
+            status_code: 405
+        );
+    }
+
+    public function notFoundHttpResonse(NotFoundHttpException $e)
+    {
+        return response()->data(
+            key: 'error',
+            message: ['error' => "the specified URL cannot be found"],
+            status_code: 404
+        );
+    }
+    public function authorizationResonse(AuthorizationException $e)
+    {
+        $message = $e->getMessage();
+        return response()->data(
+            key: 'error',
+            message: ['error' => "$message"],
+            status_code: 403
+        );
+    }
+    public function authenticationResonse(AuthenticationException $e)
+    {
+        $message = $e->getMessage();
+        return response()->data(
+            key: 'error',
+            message: ['error' => "$message"],
+            status_code: 401
+        );
     }
 }
