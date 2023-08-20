@@ -39,7 +39,7 @@ class BooksScheduling extends Model
             get: fn ($value) => json_decode($value)[0],
         );
     }
-    public function chechDurationTaks($timeDuration)
+    public function checkDurationTaks($timeDuration)
     {
         $now = now()->format('m-d');
 
