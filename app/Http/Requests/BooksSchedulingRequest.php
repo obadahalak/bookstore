@@ -34,8 +34,8 @@ class BooksSchedulingRequest extends FormRequest
     public function validatedData()
     {
         $validated = $this->validated();
-        $book_page = Book::find(request()->book_id)->page_count;
-        $validated['duration'] = $book_page / request()->pages_per_day;
+        $book_pages = Book::find(request()->book_id)->page_count;
+        $validated['duration'] = $book_pages / request()->pages_per_day;
         $validated['user_id'] = auth()->id();
         $validated['days'] = collect($validated['days'])->map(function ($value) {
             return  [ $value => ['status' => false]];
