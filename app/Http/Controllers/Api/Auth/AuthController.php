@@ -36,7 +36,7 @@ class AuthController extends Controller
      
         $user = User::where('email', $Request->email)->first();
         if (!$user || !Hash::check($Request->password, $user->password)) {
-            return response()->data(data:[
+            return response()->data(error:[
                 'email' => ['Email or password not correct'],
             ],status_code:422);
         }
