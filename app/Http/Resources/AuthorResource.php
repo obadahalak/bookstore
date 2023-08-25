@@ -14,7 +14,9 @@ class AuthorResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        if($this->resource !==null){
+
+            return [
             'id'=>$this->id,
             'name'=>$this->name,
             'bio'=>$this->bio,
@@ -23,5 +25,7 @@ class AuthorResource extends JsonResource
             'image'=>$this->getImage(),
             'books'=>BookResource::collection($this->whenLoaded('books')),
         ];
+    }
+        return abort(422,'aurhor not found');
     }
 }
