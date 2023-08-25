@@ -24,11 +24,9 @@ class AuthorController extends Controller
         return response()->paginate(AuthorResource::collection($authors->paginate(10)));
     }
 
-    public function show(){
-        $author=User::Author()->with(['image'])->find(request()->id);
-        if($author)
-            return AuthorResource::make($author);
-            return response()->data(key:"error",data:['error'=>'author not found'],code: 422);
+    public function show(User $user){
+        $author=User::Author()->with(['image'])->find($user->id);
+        AuthorResource::make($author);
     }
 
     public function books(){  
