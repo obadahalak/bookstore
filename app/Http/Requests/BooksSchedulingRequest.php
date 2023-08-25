@@ -4,6 +4,10 @@ namespace App\Http\Requests;
 
 use App\Models\Book;
 use App\Rules\DayRule;
+use App\Models\BooksScheduling;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
+use App\Rules\SchedulingTransactionRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BooksSchedulingRequest extends FormRequest
@@ -15,6 +19,12 @@ class BooksSchedulingRequest extends FormRequest
     {
         return true;
     }
+    public function messages(): array
+    {
+        return [
+            'book_id.unique' => 'you have already have this book in your scheduling',
+        ];
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -24,22 +34,24 @@ class BooksSchedulingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'days' => ['array', 'required'],
-            'days.*'=>['required',new DayRule()],
-            'status' => 'boolean',
-            'pages_per_day' => ['required', 'numeric', 'min:1'],
-            'book_id' => ['required', 'exists:books,id']
+
+            'days' => ['array', new SchedulingTransactionRule()],
+            'days.*.date' => ['required', 'date_format:Y-m-d', 'after_or_equal:' . now()->format('Y-m-d')],
+            'days.*.pages' => ['required', 'numeric'],
+            'book_id' => [
+                'required',
+                Rule::unique('books_schedulings')->where(fn (Builder $query)
+                => $query->where('user_id', auth()->id()))
+            ],
         ];
     }
     public function validatedData()
     {
         $validated = $this->validated();
-        $book_pages = Book::find(request()->book_id)->page_count;
-        $validated['duration'] = $book_pages / request()->pages_per_day;
+        $validated['duration'] = count(request()->days);
         $validated['user_id'] = auth()->id();
         $validated['days'] = collect($validated['days'])->map(function ($value) {
-            return  [ $value => ['status' => false]];
-        
+            return array_merge($value, ['status' => false]);
         });
 
         return $validated;
