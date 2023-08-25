@@ -8,7 +8,6 @@ use App\Http\Requests\AuthorRequest;
 use  App\Http\Controllers\Controller;
 use App\Http\Resources\AuthorResource;
 use App\Models\User;
-use GuzzleHttp\Psr7\Request;
 
 class AuthorController extends Controller
 {
@@ -29,7 +28,7 @@ class AuthorController extends Controller
         $author=User::Author()->with(['image'])->find(request()->id);
         if($author)
             return AuthorResource::make($author);
-            return response()->data(['error'=>'author not found'],422);
+            return response()->data(key:"error",data:['error'=>'author not found'],code: 422);
     }
 
     public function books(){  
