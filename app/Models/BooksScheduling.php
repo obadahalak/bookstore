@@ -13,9 +13,9 @@ class BooksScheduling extends Model
     use HasFactory;
     protected $table = 'books_schedulings';
     protected $guarded = [];
-    protected $casts = [
-        'days' => 'array'
-    ];
+    // protected $casts = [
+    //     'days' => 'array'
+    // ];
     public function book()
     {
         return $this->belongsTo(Book::class);
@@ -36,7 +36,7 @@ class BooksScheduling extends Model
     {
         return new Attribute(
 
-            get: fn ($value) => json_decode($value)[0],
+            get: fn ($value) => json_decode($value),
         );
     }
     public function checkDurationTaks($timeDuration)
