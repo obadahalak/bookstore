@@ -14,7 +14,7 @@ class BookResource extends JsonResource
      */
     public function toArray($request)
     {
-       
+
         return [
 
             'id' => $this->id,
@@ -23,11 +23,13 @@ class BookResource extends JsonResource
             'rating' => $this->rating,
             'author' => $this->user->name,
             'category' => $this->category->title,
-            'count_pages'=>$this->page_count,
+            'count_pages' => $this->page_count,
             'coverImage' => $this->coverImage->file,
             'gallaryImage' => GallaryImagesResurce::collection($this->whenLoaded('images')),
-            'book'=>$this->bookFile->file,
-            'is_like'=>$this->is_like(),
+            'book' => $this->bookFile->file,
+            'is_like' => $this->is_like(),
+            'similarBooks' => $this->additional,
+            'existsInScheduling'=>auth()->user()->userBooksSchedulings($this->id)
         ];
     }
 }
