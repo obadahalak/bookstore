@@ -25,7 +25,7 @@ class  DownloadLinkBookService
 
     public  function inactivationLink($token)
     {
-        Link::where('token', request()->token)->update([
+        Link::where('token',$token)->update([
             'active' => false,
         ]);
         return true;
