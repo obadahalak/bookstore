@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\DownloadBookController;
 use App\Http\Controllers\Api\WishListBooksController;
 use App\Http\Controllers\Api\BooksSchedulingController;
 use App\Http\Controllers\Api\Auth\RestPasswordController;
+use App\Http\Controllers\UploadController;
 
 ////configuration ///
 Route::get('/setup', function () {
@@ -30,14 +31,16 @@ Route::get('/clear', function () {
     Artisan::call('optimize:clear');
 });
 
-
+// Route::controller(UploadController::class)->group(function(){
+//     Route::post('/upload','store');
+// });
 
 ////authentication endpoints ///
 Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(function () {
 
 
-    Route::post('/sign-up', 'store')->name('register');
     Route::post('/sign-in', 'login')->name('login');
+    Route::post('/sign-up', 'store')->name('register');
 
 
     Route::controller(ProfileController::class)->prefix('profile')->group(function () {
@@ -66,6 +69,8 @@ Route::controller(bookController::class)->prefix('books')->as('book.')->group(fu
     Route::post('/', 'store')->name('store')->middleware('role:author');
 
     Route::get('/{book:id}', 'show')->name('show');
+
+    Route::get('/get/bestRating','bestRating');
 
 
 
@@ -101,8 +106,8 @@ Route::controller(bookController::class)->prefix('books')->as('book.')->group(fu
 
 });
 Route::controller(DownloadBookController::class)->prefix('download')->group(function () {
-    Route::get('/', 'index');
-    Route::post('/{book:id}', 'store');
+    Route::get('/check', 'index')->middleware('is_active_link');
+    Route::get('/{book:id}', 'store');
 });
 Route::get('/foryou', ForYouBookController::class);
 
@@ -117,7 +122,7 @@ Route::controller(HomeController::class)->prefix('/homepage')->group(function ()
 
 Route::controller(AuthorController::class)->prefix('authors')->group(function () {
     Route::get('/', 'index');
-    Route::get('/', 'show');
+    Route::get('/{user:id}', 'show');
     Route::get('/typesOfAuthors', 'types');
 });
 
