@@ -11,8 +11,9 @@ use Carbon\Carbon;
 class BooksSchedulingController extends Controller
 {
     public function store(BooksSchedulingRequest $reqeust)
-    {
-        return  BooksScheduling::create($reqeust->validatedData());
+    {       
+            BooksScheduling::create($reqeust->validatedData());
+            return response()->data(key:'data',message:'created successfully',code:201);
     }
     public function index()
     {
