@@ -10,11 +10,13 @@ use App\Http\Requests\BookRequest;
 use App\Http\Services\BookService;
 use App\Http\Resources\BookResource;
 use  App\Http\Controllers\Controller;
-
+use Illuminate\Http\Request;
 
 class bookController extends Controller
 {
-    public function __construct(private BookService $bookService){}
+    public function __construct(private BookService $bookService)
+    {
+    }
 
 
     public function store(BookRequest $request)
@@ -59,28 +61,26 @@ class bookController extends Controller
             ->get();
 
         $isMoreBooks = (request()->skip *= 2) >= $category->books()->count();
-        return response()->cacheResponse
-        (
-            data:BookResource::collection($books),
+        return response()->cacheResponse(
+            data: BookResource::collection($books),
             args: ['status' => $isMoreBooks],
-            status_code: 200,
+            code: 200,
             message: ''
-        );
-       ;
+        );;
     }
     public function show(Book $book)
-    { 
-         event( new TrackingUserActivity($book->id));
+    {
+        event(new TrackingUserActivity($book->id));
 
-         $book=Book::Active()->with(['images'])->find($book->id);
-         
-         $book['similarBooks']=$this->bookService->similarBooks($book->category_id);
-             
-        return response()->data(new BookResource($book));
+        $book = Book::Active()->with(['images'])->find($book->id);
+        // 
+        $similarBooks = $this->bookService->similarBooks($book->category_id)->toArray();
+
+        return response()->data(data: BookResource::make($book)->additional($similarBooks));
     }
 
     public function bestRating()
     {
         return response()->cacheResponsePaginate(BookResource::collection(Book::Active()->with(['coverImage', 'images'])->orderBy('rating', 'desc')->paginate(4)));
-    }                   
+    }
 }
