@@ -15,10 +15,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Book extends Model
 {
 
-    use HasFactory  , \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
+    use HasFactory, \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 
-    protected $guarded= [];
-    CONST  ACTIVE=1;
+    protected $guarded = [];
+    const  ACTIVE = 1;
 
 
     public function coverBook()
@@ -31,40 +31,51 @@ class Book extends Model
     }
     public function coverImage()
     {
-        return $this->morphOne(Image::class, 'imageable')->where('type','cover');
+        return $this->morphOne(Image::class, 'imageable')->where('type', 'cover');
     }
     public function images()
     {
-        return $this->morphMany(Image::class, 'imageable')->where('type','gallary');
+        return $this->morphMany(Image::class, 'imageable')->where('type', 'gallary');
     }
-    public function bookFile(){
-        return $this->morphOne(Image::class, 'imageable')->where('type','file');
+    public function bookFile()
+    {
+        return $this->morphOne(Image::class, 'imageable')->where('type', 'file');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
-    public function  likes(){
-        return $this->belongsToMany(User::class,'likes')->withTimestamps();
+    public function  likes()
+    {
+        return $this->belongsToMany(User::class, 'likes')->withTimestamps();
     }
-    public function evaluations(){
-     return $this->belongsToMany(User::class,'evaluations')->withTimestamps();
+    public function evaluations()
+    {
+        return $this->belongsToMany(User::class, 'evaluations')->withTimestamps();
     }
 
-    public function scopeActive($q){
-        return $q->where('active',self::ACTIVE);
+    public function scopeActive($q)
+    {
+        return $q->where('active', self::ACTIVE);
     }
-    public function is_like(){
-        return $this->likes->contains('user_id',auth()->id());
+    public function is_like()
+    {
+        return $this->likes->contains('user_id', auth()->id());
     }
-    
+
 
 
     public function getCacheKey()
-{
-    return 'books_by_category_' . $this->category_id;
-}
+    {
+        return 'books_by_category_' . $this->category_id;
+    }
+    public static function getCountPages($id)
+    {
+        return    self::whereId($id)->first()->page_count;
+    }
 }
