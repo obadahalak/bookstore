@@ -34,7 +34,26 @@ class BooksSchedulingController extends Controller
             return  $readed_pages;
         })->toArray();
         $completed = array_sum($pages);
-        
+
         return response()->data(['readed_pages' => $completed]);
     }
+
+
+public function send_notify(){
+    $array=[];
+    foreach(BooksScheduling::get() as $key => $days){
+
+        $array[$key]['user_id']=$days->user_id;  
+        
+        $array[$key]['book_id']=$days->user_id;  
+        $array[$key]['data']=[];
+
+        foreach($days->days as  $date){
+            if($date->status==false)  
+                array_push($array[$key]['data'],$date->date);
+            }  
+    }
+    return  $array;
+
+}
 }
