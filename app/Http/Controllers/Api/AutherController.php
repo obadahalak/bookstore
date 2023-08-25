@@ -26,7 +26,7 @@ class AuthorController extends Controller
 
     public function show(User $user){
         $author=User::Author()->with(['image'])->find($user->id);
-        AuthorResource::make($author);
+            return  response()->data(key:"data",data:AuthorResource::make($author)); 
     }
 
     public function books(){  
