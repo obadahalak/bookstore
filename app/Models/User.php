@@ -3,10 +3,11 @@
 namespace App\Models;
 
 
-use App\Models\Relations\UserRelations;
+use App\Models\Book;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Relations\UserRelations;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -86,6 +87,15 @@ class User extends Authenticatable
     }
     public function withlistBooksid(){
         return $this->likes()->get()->pluck('id');
+    }
+
+    public function userBooksSchedulings($book_id)
+    {
+        return $this->belongsToMany(Book::class,'books_schedulings')->where('book_id',$book_id)->exists();
+    }
+    public function booksSchedulings()
+    {
+        return $this->belongsToMany(Book::class,'books_schedulings');
     }
 
     
