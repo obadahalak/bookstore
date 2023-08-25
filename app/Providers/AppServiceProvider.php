@@ -31,12 +31,12 @@ class AppServiceProvider extends ServiceProvider
 
         Model::preventLazyLoading();
 
-        Response::macro('data', function ($key = 'data', $data = [], $status_code=200, $message = '') {
+        Response::macro('data', function ($key = 'data', $data = [], $code = 200, $message = '') {
             return response()->json([
                 $key => $data,
-                'status_code' => $status_code,
+                'code' => $code,
                 "message" => $message,
-            ]);
+            ],$code);
         });
 
         Response::macro('paginate', function ($data) {
@@ -53,10 +53,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        Response::macro('cacheResponse', function ($data = [], $status_code = 200, $message = '', null|array $args = null, $ttl = 60 * 60 * 2) {
+        Response::macro('cacheResponse', function ($data = [], $code = 200, $message = '', null|array $args = null, $ttl = 60 * 60 * 2) {
             $array = [
                 'data' => $data,
-                'status_code' => $status_code,
+                'code' => $code,
                 "message" => $message,
             ];
             $array = ($args == null) ? $array : array_merge($array, $args);
