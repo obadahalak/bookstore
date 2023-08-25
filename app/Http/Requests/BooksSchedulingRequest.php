@@ -35,7 +35,7 @@ class BooksSchedulingRequest extends FormRequest
     {
         return [
 
-            'days' => ['array', new SchedulingTransactionRule()],
+            'days' => ['array', new DayRule()],
             'days.*.date' => ['required', 'date_format:Y-m-d', 'after_or_equal:' . now()->format('Y-m-d')],
             'days.*.pages' => ['required', 'numeric'],
             'book_id' => [
