@@ -87,6 +87,7 @@ Route::controller(bookController::class)->prefix('books')->as('book.')->group(fu
 
     Route::controller(BooksSchedulingController::class)->prefix('books_schedulings')->group(function () {
 
+        Route::get('/completeSchedule', 'update');
         Route::get('/staticses','staticses');
         Route::get('/get', 'index');
         Route::post('/', 'store');
