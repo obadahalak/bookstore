@@ -13,9 +13,7 @@ class BooksScheduling extends Model
     use HasFactory;
     protected $table = 'books_schedulings';
     protected $guarded = [];
-    // protected $casts = [
-    //     'days' => 'array'
-    // ];
+  
     public function book()
     {
         return $this->belongsTo(Book::class);
@@ -25,6 +23,7 @@ class BooksScheduling extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     protected static function booted(): void
     {
         static::addGlobalScope('my_books_schedulings', function (Builder $builder) {
@@ -32,14 +31,8 @@ class BooksScheduling extends Model
         });
     }
 
-    public function days(): Attribute
-    {
-        return new Attribute(
-
-            get: fn ($value) => json_decode($value),
-        );
-    }
-    public function checkDurationTaks($timeDuration)
+    
+    public static function checkDurationTask($timeDuration)
     {
         $now = now()->format('m-d');
 
@@ -47,5 +40,9 @@ class BooksScheduling extends Model
     }
     public function completedScope($q){
         $q->where('status',true);
+    }
+
+    public function schedulingInfos(){
+        return $this->hasMany(SchedulingInfo::class);
     }
 }
