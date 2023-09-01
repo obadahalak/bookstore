@@ -2,57 +2,57 @@
 
 namespace App\Http\Controllers\Api;
 
+use BookScheduleService;
+use App\Models\SchedulingInfo;
+use App\Models\BooksScheduling;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BookSchedulingInfo;
 use App\Http\Requests\BooksSchedulingRequest;
 use App\Http\Resources\BooksSchedulingResourse;
-use App\Models\BooksScheduling;
-use Carbon\Carbon;
 
 class BooksSchedulingController extends Controller
 {
+    public function __construct(private BookScheduleService $bookSchedule){}
     public function store(BooksSchedulingRequest $reqeust)
     {       
-            BooksScheduling::create($reqeust->validatedData());
+        
+        $bookSchudling=BooksScheduling::create($reqeust->validatedDataScheduling());
+        
+        foreach( $reqeust->validatedDataInfo() as $info){
+            
+            $bookSchudling->schedulingInfos()->create([
+                'pages'=>$info['pages'],
+                'date'=>$info['date'],
+               'status'=>$info['status'],
+            ]);
+        }
+    
             return response()->data(key:'data',message:'created successfully',code:201);
     }
-    public function index()
-    {
-
-        return  BooksSchedulingResourse::collection(BooksScheduling::with(['user', 'book'])->paginate(10));
+    public function index(){          
+        return  BooksSchedulingResourse::collection($this->bookSchedule->index());
     }
 
     public function staticses()
-    {
-        $pages =     BooksScheduling::get()->flatMap(function ($value) {
-            $readed_pages = array();
+    {   
 
-            foreach ($value->days as $days) {
-                if ($days->status === true) {
-                    array_push($readed_pages, $value->pages_per_day);
-                }
-            }
-            return  $readed_pages;
-        })->toArray();
-        $completed = array_sum($pages);
-
-        return response()->data(['readed_pages' => $completed]);
+        $completed_pages=$this->bookSchedule->countOfCompletedPaegs();
+        $books_info=$this->bookSchedule->booksInfo();
+        
+        return response()->data(
+            key:"data",
+            data:['completed_pages'=>$completed_pages,'books_info'=>$books_info]
+        );        
     }
-    
-    public function send_notify(){
-        $array=[];
-        foreach(BooksScheduling::get() as $key => $days){
 
-            $array[$key]['user_id']=$days->user_id;  
-            
-            $array[$key]['book_id']=$days->user_id;  
-            $array[$key]['data']=[];
-
-            foreach($days->days as  $date){
-                if($date->status==false)  
-                    array_push($array[$key]['data'],$date->date);
-                }  
-        }
-        return  $array;
-
+    public function update(BookSchedulingInfo $request){
+        
+         $schedule_info=SchedulingInfo::where('id',$request->validated('task_id'))->first();
+      
+         $schedule_info ->update([
+            'status'=>true
+         ]);
+        
+         return response()->data(key:"data",data:[],message:"task completd successfully",code:201);
     }
 }
