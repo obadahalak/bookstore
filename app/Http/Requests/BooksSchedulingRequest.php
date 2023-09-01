@@ -45,15 +45,20 @@ class BooksSchedulingRequest extends FormRequest
             ],
         ];
     }
-    public function validatedData()
+    public function validatedDataScheduling()
     {
-        $validated = $this->validated();
         $validated['duration'] = count(request()->days);
         $validated['user_id'] = auth()->id();
-        $validated['days'] = collect($validated['days'])->map(function ($value) {
-            return array_merge($value, ['status' => false]);
-        });
+        $validated['book_id'] = $this->validated('book_id');
 
         return $validated;
+    }
+    public function validatedDataInfo(){
+        
+        $validated['days'] = request()->days;  
+        $validated['days'] =  collect($validated['days'])->map(function ($value) {
+            return array_merge($value, ['status' => false]);
+        });
+        return $validated['days'];
     }
 }
