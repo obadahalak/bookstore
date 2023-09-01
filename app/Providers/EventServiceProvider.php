@@ -19,8 +19,10 @@ use App\Listeners\IncreaseUserBooksEvent;
 use App\Listeners\SendNotificationForBookIsPublished;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\SchedulingInfo;
 use App\Observers\BookObserver;
 use App\Observers\CategoryObserver;
+use App\Observers\SchedulingInfoObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\EvalBarrett;
@@ -65,6 +67,7 @@ class EventServiceProvider extends ServiceProvider
         Book::observe(BookObserver::class);
         Category::observe(CategoryObserver::class);
         Evaluation::observe(EvaluationObserver::class);
+        SchedulingInfo::observe(SchedulingInfoObserver::class);
     }
 
     /**
