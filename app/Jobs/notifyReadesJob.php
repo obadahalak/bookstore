@@ -2,14 +2,14 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use App\Models\BooksScheduling;
 use App\Mail\RememberReadBookMail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Models\BooksScheduling;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class notifyReadesJob implements ShouldQueue
 {
@@ -18,11 +18,9 @@ class notifyReadesJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-  
-    
     public function __construct()
     {
-       
+
     }
 
     /**
@@ -30,22 +28,22 @@ class notifyReadesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $schedulings= BooksScheduling::withoutGlobalScopes()->with(['user:id,email','book:id,name', 'schedulingInfos'=>function($q){
-            $q->whereDay('date',now());
+        $schedulings = BooksScheduling::withoutGlobalScopes()->with(['user:id,email', 'book:id,name', 'schedulingInfos' => function ($q) {
+            $q->whereDay('date', now());
         }])->get();
-        
-        foreach($schedulings as $item){
-            
-            $to_user=$item->user->email;
-             $message['book_name']=$item->book->name;
-            foreach($item->schedulingInfos as $info){
-                $message['pages']=$info->pages;
+
+        foreach ($schedulings as $item) {
+
+            $to_user = $item->user->email;
+            $message['book_name'] = $item->book->name;
+            foreach ($item->schedulingInfos as $info) {
+                $message['pages'] = $info->pages;
             }
-          
+
             Mail::to($to_user)->send(
-                new RememberReadBookMail($message['book_name'],$message['pages'])
+                new RememberReadBookMail($message['book_name'], $message['pages'])
             );
-         
+
         }
     }
 }

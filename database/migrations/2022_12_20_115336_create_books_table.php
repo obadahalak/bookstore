@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Author;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -9,17 +8,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-          
+
             $table->longText('overview');
             $table->double('rating')->default(1);
             $table->boolean('active')->default(0);
@@ -29,11 +23,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('books');

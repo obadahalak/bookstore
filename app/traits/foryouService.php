@@ -5,12 +5,11 @@ namespace App\traits;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\DB;
 
-
-trait foryouService{
-
-    public function getCategoirsFromWishList(){
-        return  DB::table('likes')
-
+trait foryouService
+{
+    public function getCategoirsFromWishList()
+    {
+        return DB::table('likes')
             ->where('likes.user_id', auth('user')->id())
 
             ->join('books', 'books.id', '=', 'likes.book_id')
@@ -26,7 +25,8 @@ trait foryouService{
             ->take(5)->toArray();
     }
 
-    public function sortingIds($categories){
-        return  array_unique(array_merge(UserActivity::getBooksCategories(), $categories));
+    public function sortingIds($categories)
+    {
+        return array_unique(array_merge(UserActivity::getBooksCategories(), $categories));
     }
 }

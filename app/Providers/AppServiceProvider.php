@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\MetaDataResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,60 +28,39 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-
-
         Model::preventLazyLoading();
 
-        Response::macro('data', function ($key = 'data', $data = [], $code = 200, $message = '') {
-            return response()->json([
+        Response::macro('data', function ($key = 'data', $data = [], array $args=null, $cache = false, $ttl = 60 * 60 * 2) {
+            $response = [
                 $key => $data,
-                'code' => $code,
-                "message" => $message,
-            ],$code);
-        });
-
-        Response::macro('paginate', function ($data) {
-
-            return Response::make([
-                'data' => $data->items(),
-                'meta' => [
-                    'current_page' => $data->currentPage(),
-                    'last_page' => $data->lastPage(),
-                    'per_page' => $data->perPage(),
-                    'total' => $data->total(),
-                ]
-            ]);
-        });
-
-
-        Response::macro('cacheResponse', function ($data = [], $code = 200, $message = '', null|array $args = null, $ttl = 60 * 60 * 2) {
-            $array = [
-                'data' => $data,
-                'code' => $code,
-                "message" => $message,
             ];
-            $array = ($args == null) ? $array : array_merge($array, $args);
+           
+            $response = ($args == null) ? $response : array_merge($response, $args);
+            
+            // if ($cache==true)
+            //     return Cache::remember(request()->fullUrl(), $ttl, function () use ($response) {
+            //         return $response;
+            //     });
+            return response()->json($response);
+        });
+        
 
-            return Cache::remember(request()->fullUrl(), $ttl, function () use ($array) {
-                return response()->json($array);
-            });
+        Response::macro('paginate', function ($data, $cache = false, $ttl = 60 * 60 * 2) {
+            $response = Response::make([
+
+                'data' => $data,
+                'meta' => [
+                    MetaDataResource::make($data)
+                ],
+            ]);
+
+            // if ($cache==true)
+            //     return Cache::remember(request()->fullUrl(), $ttl, function () use ($response) {
+            //         return $response;
+            //     });
+
+            return $response;
         });
 
-
-
-        Response::macro('cacheResponsePaginate', function ($data = [], $status = 200, $message = '', $ttl = 60 * 60 * 2) {
-            return Cache::remember(request()->fullUrl(), $ttl, function () use ($data, $status, $message) {
-                return Response::make([
-                    'data' => $data->items(),
-                    'meta' => [
-                        'current_page' => $data->currentPage(),
-                        'last_page' => $data->lastPage(),
-                        'per_page' => $data->perPage(),
-                        'total' => $data->total(),
-                    ]
-
-                ]);
-            });
-        });
     }
 }

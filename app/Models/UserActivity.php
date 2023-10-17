@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\Book;
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class UserActivity extends Model
 {
     use HasFactory;
     protected $table = 'user_activities';
     protected $guarded = [];
+
+    public static function getBooksCategories()
+    {
+        return self::with(['book:id,category_id' => ['category:id']])->get()->pluck('book.category.id')->unique()->toArray();
+    }
 
     protected static function booted(): void
     {
@@ -24,10 +27,5 @@ class UserActivity extends Model
     public function book()
     {
         return $this->belongsTo(Book::class);
-    }
-
-    public static function getBooksCategories()
-    {
-        return self::with(['book:id,category_id' => ['category:id']])->get()->pluck('book.category.id')->unique()->toArray();
     }
 }

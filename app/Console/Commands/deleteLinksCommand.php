@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Link;
 use Illuminate\Console\Command;
 
-class deleteLinksCommand extends Command
+class DeleteLinksCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -26,6 +26,6 @@ class deleteLinksCommand extends Command
      */
     public function handle()
     {
-        Link::where('active',false)->delete();
+        Link::where('active', false)->delete();
     }
 }

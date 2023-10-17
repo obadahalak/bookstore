@@ -3,19 +3,20 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-class GallaryImagesResurce extends JsonResource
+class GallaryImagesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      */
     public function toArray($request)
     {
         return [
-           'src'=>$this->file,
+            'src' => $this->file,
         ];
     }
 }

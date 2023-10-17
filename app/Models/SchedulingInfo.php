@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SchedulingInfo extends Model
 {
     use HasFactory;
-    protected $table='scheduling_info';
-    protected $guarded=[];
+    protected $table = 'scheduling_info';
+    protected $guarded = [];
 
 }

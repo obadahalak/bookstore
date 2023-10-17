@@ -2,17 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Models\Notification;
 use App\Events\PublishedBook;
-use App\enum\NotificationMessage;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Models\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendNotificationForBookIsPublished implements ShouldQueue
 {
     public $connection = 'database';
-   
+
     /**
      * Create the event listener.
      *
@@ -31,11 +28,11 @@ class SendNotificationForBookIsPublished implements ShouldQueue
      */
     public function handle(PublishedBook $event)
     {
-        
-      Notification::create([
-        'user_id'=>$event->book->user_id,
-        'message'=>Notification::AcceptanceMessage($event->book->name),
-    ]);
-    
-}
+
+        Notification::create([
+            'user_id' => $event->book->user_id,
+            'message' => Notification::AcceptanceMessage($event->book->name),
+        ]);
+
+    }
 }

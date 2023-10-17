@@ -16,21 +16,20 @@ class EvaluationObserver
     public function creating(Evaluation $evaluation)
     {
 
-    //     $book_id=$evaluation->book_id;
-    //     $allEvaluations=Evaluation::where('book_id',$book_id)->get();
-    //     $evaluation=$allEvaluations->sum('value') / count($allEvaluations);
-        
-    //    $book=Book::find($book_id)->update([
-    //     'rating'=>$evaluation
-    //    ]);
-    //  dd($book);
+        //     $book_id=$evaluation->book_id;
+        //     $allEvaluations=Evaluation::where('book_id',$book_id)->get();
+        //     $evaluation=$allEvaluations->sum('value') / count($allEvaluations);
+
+        //    $book=Book::find($book_id)->update([
+        //     'rating'=>$evaluation
+        //    ]);
+        //  dd($book);
 
     }
 
     /**
      * Handle the Evaluation "updated" event.
      *
-     * @param  \App\Models\Evaluation  $Evaluation
      * @return void
      */
     public function updated(Evaluation $Evaluation)
@@ -41,7 +40,6 @@ class EvaluationObserver
     /**
      * Handle the Evaluation "deleted" event.
      *
-     * @param  \App\Models\Evaluation  $Evaluation
      * @return void
      */
     public function deleted(Evaluation $Evaluation)
@@ -52,7 +50,6 @@ class EvaluationObserver
     /**
      * Handle the Evaluation "restored" event.
      *
-     * @param  \App\Models\Evaluation  $Evaluation
      * @return void
      */
     public function restored(Evaluation $Evaluation)
@@ -63,7 +60,6 @@ class EvaluationObserver
     /**
      * Handle the Evaluation "force deleted" event.
      *
-     * @param  \App\Models\Evaluation  $Evaluation
      * @return void
      */
     public function forceDeleted(Evaluation $Evaluation)

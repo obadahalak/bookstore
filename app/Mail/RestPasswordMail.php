@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -18,8 +17,8 @@ class RestPasswordMail extends Mailable
      *
      * @return void
      */
+    public $data;
 
-     public $data;
     public function __construct($data)
     {
         $this->data = $data;

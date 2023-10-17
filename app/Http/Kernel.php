@@ -69,8 +69,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 
-        'is_active_link'=>\App\Http\Middleware\isActiveDownloadLink::class
+        'is_active_link' => \App\Http\Middleware\isActiveDownloadLink::class,
     ];
-   
-}
 
+}

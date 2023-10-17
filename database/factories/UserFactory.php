@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -17,17 +17,14 @@ class UserFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition()
-    
     {
-        
+
         return [
-          
+
             'name' => fake()->name(),
-          
-        
+
             'bio' => fake()->realText(100),
-            
-        
+
             'email' => fake()->unique()->safeEmail(),
             // 'email_verified_at' => now(),
             // 'role'=>random_int(1,2),

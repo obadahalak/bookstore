@@ -20,23 +20,22 @@ class BooksSchedulingFactory extends Factory
     {
         $days = [
             'saterday' => [
-                'status' => 1
+                'status' => 1,
             ],
             'sunday' => [
-                'status' => 0
+                'status' => 0,
             ],
             'moday' => [
-                'status' => 0
+                'status' => 0,
             ],
         ];
-      
+
         return [
-            'user_id'=>User::first()->id,
+            'user_id' => User::first()->id,
             'days' => $days,
             'book_id' => Book::first()->id,
             'pages_per_day' => 20,
             'duration' => 15,
-
 
         ];
     }

@@ -26,6 +26,6 @@ class RememberReadersCommand extends Command
      */
     public function handle()
     {
-        \App\Jobs\notifyReadesJob::dispatch();;
+        \App\Jobs\notifyReadesJob::dispatch();
     }
 }

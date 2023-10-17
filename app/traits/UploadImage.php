@@ -3,55 +3,53 @@
 namespace App\traits;
 
 use App\Models\Image;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-trait UploadImage{
-
+trait UploadImage
+{
     public $folder;
     public $filename;
-    public $disk='public';
+    public $disk = 'public';
 
+    public function fileName($mimType)
+    {
 
-    public function fileName($mimType){
+        $this->filename = Str::uuid() . '__.' . $mimType;
 
-        $this->filename=Str::uuid() .'__.'.$mimType;
-        
-        
-       
-        
-       while (Image::where('filename',$this->filename)->first()) {
-     
-         $this->filename=Str::uuid() .'__.'.$mimType;
-       }
-       return $this->filename;
+        while (Image::where('filename', $this->filename)->first()) {
 
+            $this->filename = Str::uuid() . '__.' . $mimType;
+        }
+
+        return $this->filename;
 
     }
-    
-    public function setFolder($folderName){
-        return $this->folder=$folderName;
+
+    public function setFolder($folderName)
+    {
+        return $this->folder = $folderName;
     }
 
+    public function uploadImage($image, $folder)
+    {
 
-    public function uploadImage($image,$folder){
-       
         $this->setFolder($folder);
-         $fileName= $this->filename($image->extension());
-         
-        
-        $path= $image->storeAs($this->folder,$fileName,$this->disk);
+        $fileName = $this->filename($image->extension());
 
-        return ['url'=>Storage::disk('public')->url($path),'filename'=>$fileName];
-       
-    
+        $path = $image->storeAs($this->folder, $fileName, $this->disk);
+
+        return ['url' => Storage::disk('public')->url($path), 'filename' => $fileName];
+
     }
-    public function unlinkImage($image,$folder){
-       
-        if(Storage::disk('public')->exists($folder.'/'.$image))
-        
-            return Storage::disk('public')->delete($folder.'/'.$image);
-        
-       
+
+    public function unlinkImage($image, $folder)
+    {
+
+        if (Storage::disk('public')->exists($folder . '/' . $image)) {
+
+            return Storage::disk('public')->delete($folder . '/' . $image);
+        }
+
     }
 }

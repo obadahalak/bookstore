@@ -23,19 +23,16 @@ class BookSchedulingInfo extends FormRequest
     public function rules(): array
     {
         return [
-            'task_id'=>['required',function($key,$value,$fail){
-                if(!BooksScheduling::
-                withWhereHas('schedulingInfos',function($q) use($value,$fail){
-                    
-                    $q->where('date','=',now()->format('Y-m-d'))
-                       ->where('id',$value);
+            'task_id' => ['required', function ($key, $value, $fail) {
+                if (! BooksScheduling::withWhereHas('schedulingInfos', function ($q) use ($value) {
+
+                    $q->where('date', '=', now()->format('Y-m-d'))
+                        ->where('id', $value);
                 })
-                
-                ->exists())
-                {
+                    ->exists()) {
                     $fail('the task didline has been finshed or task its not valid');
                 }
-            }]
+            }],
         ];
     }
 }

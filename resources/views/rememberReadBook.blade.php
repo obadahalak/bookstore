@@ -8,7 +8,7 @@
 </head>
 <body>
     <p>Hello</p>
-    <p>toDay you have {{$pages}} pages for reading in {{$book_name}} book</p>
-  
+    <p>toDay you have {{ $pages }} pages for reading in {{ $book_name }} book</p>
+
 </body>
 </html>

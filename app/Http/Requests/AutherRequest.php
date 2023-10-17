@@ -22,13 +22,14 @@ class AuthorRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules(){
+    public function rules()
+    {
         return [
-            'id'=>['required',function($attribute,$value,$fail){
-                    if(!User::where('id',$value)->first()->role==User::Author){
-                        $fail('author not found ');
-                    }
+            'id' => ['required', function ($attribute, $value, $fail) {
+                if (! User::where('id', $value)->first()->role == User::Author) {
+                    $fail('author not found ');
+                }
             }],
         ];
     }
-    }
+}

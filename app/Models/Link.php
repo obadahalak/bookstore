@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class Link extends Model
 {
     use HasFactory;
-    protected $table='download_books';
-    protected $guarded=[];
+    protected $table = 'download_books';
+    protected $guarded = [];
 
-    protected function url ():Attribute{
-        return  Attribute::make(
-            set:function($value){
-                return env('BOOK_URL') ."?token=".$value;
+    protected function url(): Attribute
+    {
+        return Attribute::make(
+            set: function ($value) {
+                return env('BOOK_URL') . '?token=' . $value;
             }
         );
     }

@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Book;
 use App\Rules\DayRule;
-use App\Models\BooksScheduling;
-use Illuminate\Validation\Rule;
 use Illuminate\Database\Query\Builder;
-use App\Rules\SchedulingTransactionRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BooksSchedulingRequest extends FormRequest
 {
@@ -19,6 +16,7 @@ class BooksSchedulingRequest extends FormRequest
     {
         return true;
     }
+
     public function messages(): array
     {
         return [
@@ -35,16 +33,16 @@ class BooksSchedulingRequest extends FormRequest
     {
         return [
 
-            'days' => ['array', new DayRule()],
+            'days' => ['array', new DayRule],
             'days.*.date' => ['required', 'date_format:Y-m-d', 'after_or_equal:' . now()->format('Y-m-d')],
             'days.*.pages' => ['required', 'numeric'],
             'book_id' => [
                 'required',
-                Rule::unique('books_schedulings')->where(fn (Builder $query)
-                => $query->where('user_id', auth()->id()))
+                Rule::unique('books_schedulings')->where(fn (Builder $query) => $query->where('user_id', auth()->id())),
             ],
         ];
     }
+
     public function validatedDataScheduling()
     {
         $validated['duration'] = count(request()->days);
@@ -53,12 +51,15 @@ class BooksSchedulingRequest extends FormRequest
 
         return $validated;
     }
-    public function validatedDataInfo(){
-        
-        $validated['days'] = request()->days;  
-        $validated['days'] =  collect($validated['days'])->map(function ($value) {
+
+    public function validatedDataInfo()
+    {
+
+        $validated['days'] = request()->days;
+        $validated['days'] = collect($validated['days'])->map(function ($value) {
             return array_merge($value, ['status' => false]);
         });
+
         return $validated['days'];
     }
 }

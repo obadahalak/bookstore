@@ -10,7 +10,6 @@ class CategoryObserver
     /**
      * Handle the category "created" event.
      *
-     * @param  \App\Models\category  $category
      * @return void
      */
     public function created(category $category)
@@ -21,13 +20,13 @@ class CategoryObserver
     /**
      * Handle the category "updated" event.
      *
-     * @param  \App\Models\category  $category
      * @return void
      */
     public function updated(category $category)
     {
         //
     }
+
     public function saved(category $category)
     {
         Cache::forget('categories');
@@ -36,7 +35,6 @@ class CategoryObserver
     /**
      * Handle the category "deleted" event.
      *
-     * @param  \App\Models\category  $category
      * @return void
      */
     public function deleted(category $category)
@@ -47,7 +45,6 @@ class CategoryObserver
     /**
      * Handle the category "restored" event.
      *
-     * @param  \App\Models\category  $category
      * @return void
      */
     public function restored(category $category)
@@ -58,7 +55,6 @@ class CategoryObserver
     /**
      * Handle the category "force deleted" event.
      *
-     * @param  \App\Models\category  $category
      * @return void
      */
     public function forceDeleted(category $category)

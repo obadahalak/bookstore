@@ -3,18 +3,16 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Tag;
-use App\Models\Book;
-use App\Models\User;
 use App\Models\Admin;
-use Spatie\Permission\Models\Role;
-use App\Models\Image;
 use App\Models\Author;
+use App\Models\Book;
 use App\Models\BooksScheduling;
 use App\Models\Category;
-use Database\Factories\BookSchedulingSeederFactory;
+use App\Models\Image;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,7 +35,6 @@ class DatabaseSeeder extends Seeder
         //  Role::create(['name' => 'author']);
 
         //  Role::create(['name'=>'user']);
-     
 
         // Admin::create([
         //     'email'=>'admin@example.com',
@@ -54,19 +51,18 @@ class DatabaseSeeder extends Seeder
         // )->create()->each(function($user) {
         //     $user->assignRole('user');
         // });
-        
+
         // User::factory(20)
         // ->has(
         //     Image::factory()
         //         ->count(1)
-               
+
         // )->create()->each(function($user) use($types) {
         //     $user->assignRole('author');
         //     // $user->type='dd';
         // });
 
         // Category::factory(8)->create();
-
 
         //     $book=Book::factory()->count(50)->hasImages(4,['type'=>'gallary'])
 
@@ -77,6 +73,6 @@ class DatabaseSeeder extends Seeder
         //    ]);
 
         //    $book->create();
-        
+
     }
 }

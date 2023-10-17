@@ -2,10 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Models\UserActivity;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-
 class AddBookToUserActivityListener
 {
     /**
@@ -23,6 +19,6 @@ class AddBookToUserActivityListener
     {
         $book = auth()->user()->userActivities();
         $book = $book->where('book_id', $event->book);
-        $book->exists() ?  $book->increment('count_of_visits')  : $book->attach($event->book);
+        $book->exists() ? $book->increment('count_of_visits') : $book->attach($event->book);
     }
 }

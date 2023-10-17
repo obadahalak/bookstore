@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Book;
+use App\Models\User;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -212,6 +214,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'User'=>App\Models\User::class,
+        'Book'=>App\Models\Book::class,
     ])->toArray(),
 
 ];

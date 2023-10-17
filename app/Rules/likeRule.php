@@ -13,9 +13,10 @@ class likeRule implements Rule
      * @return void
      */
     public $status;
+
     public function __construct($status)
     {
-        $this->status =$status ;
+        $this->status = $status;
     }
 
     /**
@@ -28,16 +29,21 @@ class likeRule implements Rule
     public function passes($attribute, $value)
     {
 
-    
-        if($this->status==1){
-        if(Book::Active()->find($value))return true;
+        if ($this->status == 1) {
+            if (Book::Active()->find($value)) {
+                return true;
+            }
+
             return false;
         }
 
-            $like=auth()->user()->likes()->where('book_id',$value)->first();
-            if($like)return true;
-            return false;
-        
+        $like = auth()->user()->likes()->where('book_id', $value)->first();
+        if ($like) {
+            return true;
+        }
+
+        return false;
+
     }
 
     /**

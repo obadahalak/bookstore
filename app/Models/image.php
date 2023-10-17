@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     use HasFactory;
-    
 
-    protected $guarded=[];
+    protected $guarded = [];
 
     /**
      * Get the parent imageable model (user or post).
      */
-    public function imageable(){
-
+    public function imageable()
+    {
 
         return $this->morphTo();
     }

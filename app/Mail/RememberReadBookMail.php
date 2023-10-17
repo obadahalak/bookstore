@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,12 +15,11 @@ class RememberReadBookMail extends Mailable
     /**
      * Create a new message instance.
      */
-    
-     public $book_name;
+    public $book_name;
     public $pages;
-    public function __construct($book_name,$pages)
+
+    public function __construct($book_name, $pages)
     {
-      
         $this->book_name = $book_name;
         $this->pages = $pages;
     }

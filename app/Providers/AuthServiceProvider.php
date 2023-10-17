@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Providers;
+
 // use Illuminate\Support\Facades\Gate;
-use App\Models\User;
-use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -26,11 +25,12 @@ class AuthServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {  Passport::tokensCan([
-        'Author' => 'Author scope',
-        'visitor' => 'user scope',
-    ]);
+    {
+        Passport::tokensCan([
+            'Author' => 'Author scope',
+            'visitor' => 'user scope',
+        ]);
         $this->registerPolicies();
-       
+
     }
 }

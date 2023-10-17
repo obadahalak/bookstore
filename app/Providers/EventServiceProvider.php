@@ -2,31 +2,28 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use App\Events\Evaluated;
-use App\Models\Evaluation;
-use App\Events\EvaluateEvent;
 use App\Events\PublishedBook;
-use App\Events\TrackingUserActivity;
 use App\Events\StoreBookEvent;
+use App\Events\TrackingUserActivity;
 use App\Listeners\AddBookToUserActivityListener;
-use App\Observers\UserObserver;
-use App\Listeners\EvaluateListener;
-use App\Observers\EvaluationObserver;
-use Illuminate\Support\Facades\Event;
 use App\Listeners\CalculateBookRating;
 use App\Listeners\IncreaseUserBooksEvent;
 use App\Listeners\SendNotificationForBookIsPublished;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Evaluation;
 use App\Models\SchedulingInfo;
+use App\Models\User;
 use App\Observers\BookObserver;
 use App\Observers\CategoryObserver;
+use App\Observers\EvaluationObserver;
 use App\Observers\SchedulingInfoObserver;
+use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\EvalBarrett;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -39,21 +36,20 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        Evaluated::class=>[
-        CalculateBookRating::class
+        Evaluated::class => [
+            CalculateBookRating::class,
         ],
-        PublishedBook::class=>[
-            SendNotificationForBookIsPublished::class
-            ],
-        StoreBookEvent::class=>[
+        PublishedBook::class => [
+            SendNotificationForBookIsPublished::class,
+        ],
+        StoreBookEvent::class => [
             IncreaseUserBooksEvent::class,
-            
-        ], 
-        TrackingUserActivity::class=>[
-           AddBookToUserActivityListener::class        
-        ]    
+
+        ],
+        TrackingUserActivity::class => [
+            AddBookToUserActivityListener::class,
+        ],
     ];
- 
 
     /**
      * Register any events for your application.
@@ -62,7 +58,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
+
         User::observe(UserObserver::class);
         Book::observe(BookObserver::class);
         Category::observe(CategoryObserver::class);

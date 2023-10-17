@@ -49,7 +49,7 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
-          'admin' => [
+        'admin' => [
             'driver' => 'passport',
             'provider' => 'admins',
         ],
@@ -81,7 +81,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-
 
         // 'users' => [
         //     'driver' => 'database',
