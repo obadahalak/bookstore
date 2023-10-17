@@ -15,24 +15,17 @@ class RestPasswordController extends Controller
     public function index(UserRequest $request)
     {
 
-        $user = User::where('email', $request->email)->first();
-
-        if ($user) {
-
-            Bus::batch(new sendResetPasswordCode($request->email))
-                ->then(function (Batch $batch) {
-
-                })->dispatch();
-        }
-
+         User::firstWhere('email', $request->email) 
+         ? Bus::batch(new sendResetPasswordCode($request->email))->dispatch()
+         : false;
         return response()->json(['message' => 'If this email is already registered, a code will be sent to your email to reset your password']);
+    } 
 
-    }
-
+    
     public function update(UserRequest $request, UserService $userService)
     {
 
-        $user = User::firstWhere('rest_token', $request->token)->first();
+        $user = User::firstWhere('rest_token', $request->token);
 
         $userService->changePassword($user, $request->passowrd);
 
