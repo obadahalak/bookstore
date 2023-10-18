@@ -16,7 +16,7 @@ class DownloadBookController extends Controller
     public function store(Book $book, DownloadLinkBookService $service)
     {
 
-        $token = generate_token();
+        $token = generateToken();
         $link = $service->store($token, $book->id);
 
         return response()->data($link->url);
