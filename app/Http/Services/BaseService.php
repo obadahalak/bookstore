@@ -2,13 +2,6 @@
 
 namespace App\Http\Services;
 
-use Error;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use App\Http\Services\SearchService;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-
 class BaseService 
 {
     protected $model;

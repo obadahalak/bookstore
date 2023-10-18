@@ -50,8 +50,6 @@ Route::controller(BookController::class)->prefix('books')->as('book.')->group(fu
 
     Route::get('seeMore', 'getBooks');
 
-    // Route::get('/', 'index');
-
     Route::post('/', 'store')->name('store')->middleware('role:author');
 
     Route::get('{book:id}', 'show')->name('show');
@@ -108,5 +106,4 @@ Route::controller(AuthorController::class)->prefix('authors')->group(function ()
 //  categories endpoints ////
 Route::controller(CategoryController::class)->prefix('categories')->group(function () {
     Route::get('/', 'show');
-    // Route::post('/', 'store')->middleware('role:author,user');
 });

@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
 use App\Models\SchedulingInfo;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookSchedulingInfo;
 use App\Http\Services\BookScheduleService;

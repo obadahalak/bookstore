@@ -11,6 +11,11 @@ class Image extends Model
 
     protected $guarded = [];
 
+    const COVER_TYPE="cover";
+    
+    const GALLARY_TYPE="cover";
+    
+    const FILE_TYPE="cover";
     /**
      * Get the parent imageable model (user or post).
      */

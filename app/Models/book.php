@@ -15,6 +15,7 @@ class Book extends Model
 
     protected $guarded = [];
 
+
     public static function getCountPages($id)
     {
         return self::whereId($id)->first()->page_count;
@@ -25,7 +26,7 @@ class Book extends Model
         return $q->where('active', self::ACTIVE);
     }
 
-    public function is_like()
+    public function isLike()
     {
         return $this->likes->contains('user_id', auth()->id());
     }

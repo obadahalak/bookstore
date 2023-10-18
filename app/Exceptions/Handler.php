@@ -54,86 +54,86 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // public function render($request, Throwable $e)
-    // {
-    // return  parent::render($request, $e);
-    // if ($e instanceof ModelNotFoundException) {
-    //     return $this->modelNotFoundResponse($e);
-    // }
-    // if ($e instanceof NotFoundHttpException) {
-    //     return $this->notFoundHttpResonse($e);
-    // }
-    // if ($e instanceof AuthorizationException) {
-    //     return $this->authorizationResonse($e);
-    // }
-    // if ($e instanceof AuthenticationException) {
-    //     return $this->authenticationResonse($e);
-    // }
-    // if ($e instanceof ValidationException) {
+    public function render($request, Throwable $e)
+    {
+        return  parent::render($request, $e);
+        if ($e instanceof ModelNotFoundException) {
+            return $this->modelNotFoundResponse($e);
+        }
+        if ($e instanceof NotFoundHttpException) {
+            return $this->notFoundHttpResonse($e);
+        }
+        if ($e instanceof AuthorizationException) {
+            return $this->authorizationResonse($e);
+        }
+        if ($e instanceof AuthenticationException) {
+            return $this->authenticationResonse($e);
+        }
+        if ($e instanceof ValidationException) {
 
-    //     return $this->validationResponse($e);
-    // } else {
-    //     return response()->data(
-    //         key: 'error',
-    //         message: 'Unexpected exception, try later',
-    //         code: 500
-    //     );
-    // }
+            return $this->validationResponse($e);
+        } else {
+            return response()->data(
+                key: 'error',
+                message: 'Unexpected exception, try later',
+                code: 500
+            );
+        }
 
-    //     parent::render($request, $e);
-    // }
+        parent::render($request, $e);
+    }
 
-    // private function  modelNotFoundResponse(ModelNotFoundException $exception)
-    // {
-    //     $modelName = strtolower(class_basename($exception->getModel()));
-    //     return response()->data(
-    //         key: 'error',
-    //         message: "$modelName not found",
-    //         code: 404
-    //     );
-    // }
-    // private function validationResponse(ValidationException $e)
-    // {
+    private function modelNotFoundResponse(ModelNotFoundException $exception)
+    {
+        $modelName = strtolower(class_basename($exception->getModel()));
+        return response()->data(
+            key: 'error',
+            message: "$modelName not found",
+            code: 404
+        );
+    }
+    private function validationResponse(ValidationException $e)
+    {
 
-    //     return response()->data(
-    //         key: 'error',
-    //         data: ['message' => $e->getMessage(), 'errors' =>  $e->errors()],
-    //         code: 422
-    //     );
-    // }
-    // public function methodHttpResponse(MethodNotAllowedHttpException $e)
-    // {
-    //     return response()->data(
-    //         key: 'error',
-    //         message: ['error' => "the specified methodfor the request is invalid"],
-    //         code: 405
-    //     );
-    // }
+        return response()->data(
+            key: 'error',
+            data: ['message' => $e->getMessage(), 'errors' =>  $e->errors()],
+            code: 422
+        );
+    }
+    public function methodHttpResponse(MethodNotAllowedHttpException $e)
+    {
+        return response()->data(
+            key: 'error',
+            message: ['error' => "the specified methodfor the request is invalid"],
+            code: 405
+        );
+    }
 
-    // public function notFoundHttpResonse(NotFoundHttpException $e)
-    // {
-    //     return response()->data(
-    //         key: 'error',
-    //         message: ['error' => "the specified URL cannot be found"],
-    //         code: 404
-    //     );
-    // }
-    // public function authorizationResonse(AuthorizationException $e)
-    // {
-    //     $message = $e->getMessage();
-    //     return response()->data(
-    //         key: 'error',
-    //         message: ['error' => "$message"],
-    //         code: 403
-    //     );
-    // }
-    // public function authenticationResonse(AuthenticationException $e)
-    // {
-    //     $message = $e->getMessage();
-    //     return response()->data(
-    //         key: 'error',
-    //         message: ['error' => "$message"],
-    //         code: 401
-    //     );
-    // }
+    public function notFoundHttpResonse(NotFoundHttpException $e)
+    {
+        return response()->data(
+            key: 'error',
+            message: ['error' => "the specified URL cannot be found"],
+            code: 404
+        );
+    }
+    public function authorizationResonse(AuthorizationException $e)
+    {
+        $message = $e->getMessage();
+        return response()->data(
+            key: 'error',
+            message: ['error' => "$message"],
+            code: 403
+        );
+    }
+    public function authenticationResonse(AuthenticationException $e)
+    {
+        $message = $e->getMessage();
+        return response()->data(
+            key: 'error',
+            message: ['error' => "$message"],
+            code: 401
+        );
+    }
 }
