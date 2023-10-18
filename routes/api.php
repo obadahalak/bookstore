@@ -21,13 +21,10 @@ use Illuminate\Support\Facades\Route;
 ////configuration ///
 Route::get('setup', function () {
 
-    return   Artisan::call('storage:link');
+    return Artisan::call('storage:link');
 });
 
 
-// Route::controller(UploadController::class)->group(function(){
-//     Route::post('/upload','store');
-// });
 
 ////authentication endpoints ///
 Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(function () {
@@ -38,7 +35,7 @@ Route::controller(AuthController::class)->name('user.')->prefix('auth')->group(f
     Route::controller(ProfileController::class)->prefix('profile')->group(function () {
         Route::get('/', 'index')->middleware('role:author,user');
 
-        Route::post('update-user', 'update')->name('update')->middleware('role:author,user');
+        Route::post('edit', 'update')->name('update')->middleware('role:author,user');
 
         Route::controller(RestPasswordController::class)->group(function () {
 
@@ -62,8 +59,8 @@ Route::controller(BookController::class)->prefix('books')->as('book.')->group(fu
     Route::get('get/bestRating', 'bestRating');
 
     Route::controller(CategoryBookController::class)->prefix('category')->group(function () {
-        Route::get('{category}/books','books')->name('f');
-        Route::get('/index','index');
+        Route::get('{category}/books', 'books')->name('f');
+        Route::get('/index', 'index');
         Route::get('/{category}', 'show');
     });
 

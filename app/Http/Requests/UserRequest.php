@@ -46,8 +46,6 @@ class UserRequest extends FormRequest
             $generalRules['type'] = ['nullable'];
             $generalRules['email'] = Rule::unique('users', 'email')->ignore(auth()->id());
             $generalRules['password'] = 'required_with:new_password'; // old password
-
-            // $generalRules['password'][1]= 'current_password'; // old password
             return $generalRules;
 
         }

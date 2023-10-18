@@ -28,7 +28,7 @@ class BookResource extends JsonResource
             'coverImage' => $this->coverImage->file,
             'gallaryImage' => GallaryImagesResource::collection($this->whenLoaded('images')),
             'book' => $this->bookFile->file,
-            'is_like' => $this->is_like(),
+            'is_like' => $this->isLike(),
             'similarBooks' => $this->additional,
             // 'existsInScheduling'=>auth()->user()->userBooksSchedulings($this->id)
         ];

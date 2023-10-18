@@ -30,35 +30,39 @@ class AppServiceProvider extends ServiceProvider
 
         Model::preventLazyLoading();
 
-        Response::macro('data', function ($key = 'data', $data = [], array $args=null, $cache = false, $ttl = 60 * 60 * 2) {
+        Response::macro('data', function (string $key, array $data, ?array $args = null, bool $cache = false, int $ttl = 7200) {
             $response = [
                 $key => $data,
             ];
-           
-            $response = ($args == null) ? $response : array_merge($response, $args);
-            
-            // if ($cache==true)
-            //     return Cache::remember(request()->fullUrl(), $ttl, function () use ($response) {
-            //         return $response;
-            //     });
+        
+            if ($args !== null) {
+                $response = array_merge($response, $args);
+            }
+        
+            if ($cache) {
+                return Cache::remember(request()->fullUrl(), $ttl, function () use ($response) {
+                    return response()->json($response);
+                });
+            }
+        
             return response()->json($response);
         });
-        
+      
 
-        Response::macro('paginate', function ($data, $cache = false, $ttl = 60 * 60 * 2) {
+        Response::macro('paginate', function ($paginatedData, bool $cache = false, int $ttl = 7200): Response {
             $response = Response::make([
-
-                'data' => $data,
+                'data' => $paginatedData,
                 'meta' => [
-                    MetaDataResource::make($data)
+                    MetaDataResource::make($paginatedData)
                 ],
             ]);
-
-            // if ($cache==true)
-            //     return Cache::remember(request()->fullUrl(), $ttl, function () use ($response) {
-            //         return $response;
-            //     });
-
+        
+            if ($cache) {
+                return Cache::remember(request()->fullUrl(), $ttl, function () use ($response) {
+                    return $response;
+                });
+            }
+        
             return $response;
         });
 

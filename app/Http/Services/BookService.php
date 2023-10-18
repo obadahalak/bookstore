@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Events\PublishedBook;
 use App\Models\Book;
+use App\Models\Image;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -63,7 +64,7 @@ class BookService
             $book->images()->create([
                 'file' => Storage::disk('public')->url($book_images['src']->store('bookGaller', 'public')),
                 'filename' => $book_images['src']->getClientOriginalName(),
-                'type' => 'gallary',
+                'type' => Image::GALLARY_TYPE,
             ]);
         }
 
@@ -72,25 +73,20 @@ class BookService
 
     protected function coverImage($book, $data)
     {
-        $book->coverImage()->create([
-            'file' => Storage::disk('public')->url($data->store('bookCover', 'public')),
-            'filename' => $data->getClientOriginalName(),
-            'type' => 'cover',
-
-        ]);
-
-        return $book;
+       return $book->coverImage()->create([
+                'file' => Storage::disk('public')->url($data->store('bookCover', 'public')),
+                'filename' => $data->getClientOriginalName(),
+                'type' => Image::COVER_TYPE,
+            ]);
     }
 
     protected function bookFile($book, $data)
     {
-        $book->bookFile()->create([
-            'file' => Storage::disk('public')->url($data->storeAs('books', "{$book->id}.pdf", 'public')),
-            'filename' => "{$book->id}.pdf",
-            'type' => 'file',
-        ]);
-
-        return $book;
+        return  $book->bookFile()->create([
+                'file' => Storage::disk('public')->url($data->storeAs('books', "{$book->id}.pdf", 'public')),
+                'filename' => "{$book->id}.pdf",
+                'type' => Image::FILE_TYPE,
+            ]);
 
     }
 }
